@@ -12,11 +12,18 @@ find_package(rclcpp REQUIRED)
 #--------------------------------------------------------------------------------
 # Build
 #--------------------------------------------------------------------------------
-add_executable(driver_node src/driver_node.cpp)
+add_executable(driver_node
+  src/driver_node.cpp
+)
+
 target_include_directories(driver_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-target_compile_features(driver_node PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+
+ament_target_dependencies(driver_node
+  rclcpp
+)
+
 
 #--------------------------------------------------------------------------------
 # Install

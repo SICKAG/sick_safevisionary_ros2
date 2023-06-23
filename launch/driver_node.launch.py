@@ -16,13 +16,7 @@ def generate_launch_description():
     driver_node = Node(
         package="sick_safevisionary_ros2",
         executable="driver_node",
-        parameters=[
-            {"a": "/spacenav/twist"},
-            {"b": "/target_wrench"},
-            {"c": "world"},
-            {"d": 50},
-        ],
-        prefix="screen -d -m gdb -command=/home/scherzin/.ros/my_debug_log --ex run --args",
+        #prefix="screen -d -m gdb -command=/home/scherzin/.ros/my_debug_log --ex run --args",
         output="both",
     )
 
