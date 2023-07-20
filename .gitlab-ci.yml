@@ -1,0 +1,13 @@
+variables:
+  BUILD_FOXY: "false"
+  BUILD_GALACTIC: "false"
+  BUILD_HUMBLE: "true"
+  BUILD_ROLLING: "false"
+  UPLOAD_BRANCH_NAME: main
+  CLANG_TIDY: "false"
+  CMAKE_ARGS: "-DCMAKE_EXPORT_COMPILE_COMMANDS=1"
+
+include:
+  - project: 'continuous_integration/ci_scripts'
+    ref: master
+    file: '/gitlab-ci-yml/ros2_pipeline.yml'
