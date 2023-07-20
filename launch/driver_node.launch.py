@@ -12,13 +12,14 @@
 from launch import LaunchDescription
 from launch_ros.actions import Node
 
+
 def generate_launch_description():
     driver_node = Node(
         package="sick_safevisionary_ros2",
         executable="driver_node",
-        #prefix="screen -d -m gdb -command=/home/scherzin/.ros/my_debug_log --ex run --args",
+        # prefix="screen -d -m gdb -command=/home/scherzin/.ros/my_debug_log \
+        # --ex run --args",
         output="both",
     )
-
 
     return LaunchDescription([driver_node])

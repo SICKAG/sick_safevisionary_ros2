@@ -17,6 +17,13 @@ repos:
       - id: trailing-whitespace
       - id: check-byte-order-marker  # Forbid UTF-8 byte-order markers
 
+  # Python
+  - repo: https://github.com/pycqa/flake8
+    rev: 6.0.0
+    hooks:
+    -   id: flake8
+
+  # C++
   - repo: local
     hooks:
       - id: clang-format
