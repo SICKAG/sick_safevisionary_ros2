@@ -16,20 +16,17 @@
 class SickSafeVisionary : public rclcpp_lifecycle::LifecycleNode
 {
 public:
-  SickSafeVisionary()
-    : LifecycleNode("sick_safevisionary")
-  {
-  }
+  SickSafeVisionary() : LifecycleNode("sick_safevisionary") {}
 
   using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
-  CallbackReturn on_configure(const rclcpp_lifecycle::State& previous_state) override;
+  CallbackReturn on_configure(const rclcpp_lifecycle::State & previous_state) override;
 
-  CallbackReturn on_activate(const rclcpp_lifecycle::State& previous_state) override;
+  CallbackReturn on_activate(const rclcpp_lifecycle::State & previous_state) override;
 
-  CallbackReturn on_deactivate(const rclcpp_lifecycle::State& previous_state) override;
+  CallbackReturn on_deactivate(const rclcpp_lifecycle::State & previous_state) override;
 
-  CallbackReturn on_cleanup(const rclcpp_lifecycle::State& previous_state) override;
+  CallbackReturn on_cleanup(const rclcpp_lifecycle::State & previous_state) override;
 
-  CallbackReturn on_shutdown(const rclcpp_lifecycle::State& previous_state) override;
+  CallbackReturn on_shutdown(const rclcpp_lifecycle::State & previous_state) override;
 };

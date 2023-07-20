@@ -12,7 +12,7 @@
 
 #include "sick_safevisionary_ros2/sick_safevisionary.hpp"
 
-int main(int argc, char** argv)
+int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
   rclcpp::spin(std::make_shared<SickSafeVisionary>()->get_node_base_interface());
