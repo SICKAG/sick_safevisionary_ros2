@@ -8,11 +8,13 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_lifecycle REQUIRED)
 
 #--------------------------------------------------------------------------------
 # Build
 #--------------------------------------------------------------------------------
 add_executable(driver_node
+  src/sick_safevisionary.cpp
   src/driver_node.cpp
 )
 
@@ -22,6 +24,7 @@ target_include_directories(driver_node PUBLIC
 
 ament_target_dependencies(driver_node
   rclcpp
+  rclcpp_lifecycle
 )
 
 

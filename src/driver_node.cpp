@@ -15,7 +15,7 @@
 int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<SickSafeVisionary>());
+  rclcpp::spin(std::make_shared<SickSafeVisionary>()->get_node_base_interface());
   rclcpp::shutdown();
   return 0;
 }
