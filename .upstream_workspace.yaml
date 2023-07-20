@@ -3,4 +3,3 @@ repositories:
     type: git
     url: https://ids-git.fzi.de/project-groups/sick_safevisionary/sick_safevisionary_base
     version: sick_visionary_base_branch
-
