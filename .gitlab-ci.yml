@@ -6,6 +6,13 @@ variables:
   UPLOAD_BRANCH_NAME: main
   CLANG_TIDY: "false"
   CMAKE_ARGS: "-DCMAKE_EXPORT_COMPILE_COMMANDS=1"
+  RUN_PRECOMMIT_JOB: "true"
+
+run pre-commit:
+  image: ids-git.fzi.de:5555/continuous_integration/ci_docker_images/ubuntu_20.04_workstation
+  script:
+    - pip3 install pre-commit==2.17.0
+    - pre-commit run -a
 
 include:
   - project: 'continuous_integration/ci_scripts'
