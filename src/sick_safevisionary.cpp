@@ -12,6 +12,8 @@
 
 #include "sick_safevisionary_ros2/sick_safevisionary.hpp"
 
+namespace sick
+{
 SickSafeVisionary::CallbackReturn SickSafeVisionary::on_configure(
   [[maybe_unused]] const rclcpp_lifecycle::State & previous_state)
 {
@@ -41,3 +43,4 @@ SickSafeVisionary::CallbackReturn SickSafeVisionary::on_shutdown(
 {
   return CallbackReturn::SUCCESS;
 }
+}  // namespace sick

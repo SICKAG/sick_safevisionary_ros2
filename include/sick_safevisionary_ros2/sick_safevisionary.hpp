@@ -13,6 +13,8 @@
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
+namespace sick
+{
 class SickSafeVisionary : public rclcpp_lifecycle::LifecycleNode
 {
 public:
@@ -30,3 +32,4 @@ public:
 
   CallbackReturn on_shutdown(const rclcpp_lifecycle::State & previous_state) override;
 };
+}  // namespace sick
