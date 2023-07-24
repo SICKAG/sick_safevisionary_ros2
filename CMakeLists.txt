@@ -9,6 +9,8 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
+find_package(sick_safevisionary_base REQUIRED)
+find_package(Boost REQUIRED)
 
 #--------------------------------------------------------------------------------
 # Build
@@ -27,6 +29,9 @@ ament_target_dependencies(driver_node
   rclcpp_lifecycle
 )
 
+target_link_libraries(driver_node
+  sick_safevisionary_base::sick_safevisionary_base
+)
 
 #--------------------------------------------------------------------------------
 # Install
