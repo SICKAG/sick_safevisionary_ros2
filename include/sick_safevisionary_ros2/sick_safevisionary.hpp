@@ -58,11 +58,14 @@ public:
   CallbackReturn on_shutdown(const rclcpp_lifecycle::State & previous_state) override;
 
 private:
+  void reset();
+
   std::shared_ptr<visionary::SafeVisionaryData> data_handle_;
   std::shared_ptr<visionary::SafeVisionaryDataStream> data_stream_;
   std::thread receive_thread_;
   std::thread publish_thread_;
   boost::lockfree::spsc_queue<visionary::SafeVisionaryData, boost::lockfree::capacity<10>>
     spsc_queue_;
+  std::atomic<bool> continue_{false};
 };
 }  // namespace sick
