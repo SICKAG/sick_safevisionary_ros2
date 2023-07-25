@@ -7,6 +7,7 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(lifecycle_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(sick_safevisionary_base REQUIRED)
@@ -25,6 +26,7 @@ target_include_directories(driver_node PUBLIC
   $<INSTALL_INTERFACE:include>)
 
 ament_target_dependencies(driver_node
+  lifecycle_msgs
   rclcpp
   rclcpp_lifecycle
 )

@@ -15,6 +15,7 @@
 #include <chrono>
 #include <thread>
 
+#include "lifecycle_msgs/msg/state.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "rclcpp_lifecycle/state.hpp"
 #include "sick_safevisionary_base/SafeVisionaryData.h"
@@ -48,7 +49,9 @@ SickSafeVisionary::CallbackReturn SickSafeVisionary::on_configure(
   publish_thread_ = std::thread([&]() {
     while (continue_) {
       auto tmp = visionary::SafeVisionaryData();
-      if (spsc_queue_.pop(tmp) && this->get_current_state().label() == "active") {
+      if (
+        spsc_queue_.pop(tmp) &&
+        this->get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
         publish();
       } else {
         std::this_thread::sleep_for(std::chrono::microseconds(100));
