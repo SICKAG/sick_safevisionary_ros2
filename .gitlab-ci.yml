@@ -7,6 +7,8 @@ variables:
   CLANG_TIDY: "false"
   CMAKE_ARGS: "-DCMAKE_EXPORT_COMPILE_COMMANDS=1"
   RUN_PRECOMMIT_JOB: "true"
+  UPSTREAM_WORKSPACE: ".upstream_workspace.yaml"
+  ROSDEP_SKIP_KEYS: "sick_safevisionary_base"
 
 run pre-commit:
   image: ids-git.fzi.de:5555/continuous_integration/ci_docker_images/ubuntu_20.04_workstation
