@@ -59,6 +59,7 @@ public:
 
 private:
   void reset();
+  void publish();
 
   std::shared_ptr<visionary::SafeVisionaryData> data_handle_;
   std::shared_ptr<visionary::SafeVisionaryDataStream> data_stream_;

@@ -12,6 +12,9 @@
 
 #include "sick_safevisionary_ros2/sick_safevisionary.hpp"
 
+#include <chrono>
+#include <thread>
+
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "rclcpp_lifecycle/state.hpp"
 #include "sick_safevisionary_base/SafeVisionaryData.h"
@@ -45,9 +48,10 @@ SickSafeVisionary::CallbackReturn SickSafeVisionary::on_configure(
   publish_thread_ = std::thread([&]() {
     while (continue_) {
       auto tmp = visionary::SafeVisionaryData();
-      spsc_queue_.pop(tmp);
-      if (this->get_current_state().label() == "active") {
-        // TODO: publish
+      if (spsc_queue_.pop(tmp) && this->get_current_state().label() == "active") {
+        publish();
+      } else {
+        std::this_thread::sleep_for(std::chrono::microseconds(100));
       }
     }
   });
@@ -92,5 +96,7 @@ void SickSafeVisionary::reset()
   }
   data_stream_->closeUdpConnection();
 }
+
+void SickSafeVisionary::publish() { RCLCPP_INFO(this->get_logger(), "got new data to publish"); }
 
 }  // namespace sick
