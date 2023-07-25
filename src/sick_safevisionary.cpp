@@ -26,10 +26,11 @@ SickSafeVisionary::CallbackReturn SickSafeVisionary::on_configure(
   [[maybe_unused]] const rclcpp_lifecycle::State & previous_state)
 {
   // Setup UDP connection to the camera
+  int port = this->declare_parameter("port", 6060);
   data_handle_ = std::make_shared<visionary::SafeVisionaryData>();
   data_stream_ = std::make_shared<visionary::SafeVisionaryDataStream>(data_handle_);
-  if (!data_stream_->openUdpConnection(htons(6060))) {
-    RCLCPP_ERROR(this->get_logger(), "Could not open UDP connection");
+  if (!data_stream_->openUdpConnection(htons(port))) {
+    RCLCPP_ERROR(this->get_logger(), "Could not open UDP connection on port: %i", port);
     return CallbackReturn::ERROR;
   }
   continue_ = true;
