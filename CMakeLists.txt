@@ -11,7 +11,7 @@ find_package(lifecycle_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(sick_safevisionary_base REQUIRED)
-find_package(Boost REQUIRED)
+find_package(Boost REQUIRED COMPONENTS)
 
 #--------------------------------------------------------------------------------
 # Build
@@ -33,6 +33,7 @@ ament_target_dependencies(driver_node
 
 target_link_libraries(driver_node
   sick_safevisionary_base::sick_safevisionary_base
+  Boost::boost
 )
 
 #--------------------------------------------------------------------------------
