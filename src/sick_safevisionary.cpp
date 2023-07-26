@@ -38,10 +38,11 @@ SickSafeVisionary::CallbackReturn SickSafeVisionary::on_configure(
   // Start an asynchronous receive thread with a lock-free producer.
   receive_thread_ = std::thread([&]() {
     while (continue_) {
-      if (!data_stream_->getNextBlobUdp()) {
+      if (data_stream_->getNextBlobUdp()) {
+        spsc_queue_.push(*data_handle_);
+      } else {
         RCLCPP_WARN(this->get_logger(), "UDP stream incomplete, skipping this frame.");
       }
-      spsc_queue_.push(*data_handle_);
     }
   });
 
