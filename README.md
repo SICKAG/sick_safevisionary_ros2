@@ -10,7 +10,7 @@ sudo apt-get install libboost-all-dev
 In a sourced terminal, run
 
 ```bash
-colcon build --packages-select sick_safevisionary_ros2 --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Debug
+colcon build --packages-select sick_safevisionary_driver --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Debug
 ```
 
 ## Getting started
