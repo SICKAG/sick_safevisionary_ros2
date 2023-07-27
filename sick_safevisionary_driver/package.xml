@@ -12,6 +12,7 @@
   <depend>lifecycle_msgs</depend>
   <depend>rclcpp</depend>
   <depend>rclcpp_lifecycle</depend>
+  <depend>sensor_msgs</depend>
   <depend>sick_safevisionary_base</depend>
 
   <export>

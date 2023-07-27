@@ -10,6 +10,9 @@
  */
 //-----------------------------------------------------------------------------
 
+#ifndef SICK_SAFE_VISIONARY_HPP_INCLUDED
+#define SICK_SAFE_VISIONARY_HPP_INCLUDED
+
 #include <boost/lockfree/policies.hpp>
 #include <boost/lockfree/spsc_queue.hpp>
 #include <memory>
@@ -19,6 +22,7 @@
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "sick_safevisionary_base/SafeVisionaryData.h"
 #include "sick_safevisionary_base/SafeVisionaryDataStream.h"
+#include "sick_safevisionary_driver/compound_publisher.hpp"
 
 namespace sick
 {
@@ -59,7 +63,6 @@ public:
 
 private:
   void reset();
-  void publish();
 
   std::shared_ptr<visionary::SafeVisionaryData> data_handle_;
   std::shared_ptr<visionary::SafeVisionaryDataStream> data_stream_;
@@ -68,5 +71,9 @@ private:
   boost::lockfree::spsc_queue<visionary::SafeVisionaryData, boost::lockfree::capacity<10>>
     spsc_queue_;
   std::atomic<bool> continue_{false};
+
+  CompoundPublisher data_publisher_;
 };
 }  // namespace sick
+
+#endif

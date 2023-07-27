@@ -35,6 +35,7 @@ SickSafeVisionary::CallbackReturn SickSafeVisionary::on_configure(
     return CallbackReturn::ERROR;
   }
   continue_ = true;
+  data_publisher_ = CompoundPublisher(this);
 
   // Start an asynchronous receive thread with a lock-free producer.
   receive_thread_ = std::thread([&]() {
@@ -51,11 +52,14 @@ SickSafeVisionary::CallbackReturn SickSafeVisionary::on_configure(
   // We need to consume regardless of the current state, but publish only if we are active.
   publish_thread_ = std::thread([&]() {
     while (continue_) {
-      auto tmp = visionary::SafeVisionaryData();
+      auto data = visionary::SafeVisionaryData();
       if (
-        spsc_queue_.pop(tmp) &&
+        spsc_queue_.pop(data) &&
         this->get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
-        publish();
+        auto header = std_msgs::msg::Header();
+        header.frame_id = "camera";
+        header.stamp = this->now();
+        data_publisher_.publish(header, data);
       } else {
         std::this_thread::sleep_for(std::chrono::microseconds(100));
       }
@@ -68,12 +72,14 @@ SickSafeVisionary::CallbackReturn SickSafeVisionary::on_configure(
 SickSafeVisionary::CallbackReturn SickSafeVisionary::on_activate(
   [[maybe_unused]] const rclcpp_lifecycle::State & previous_state)
 {
+  data_publisher_.activate();
   return CallbackReturn::SUCCESS;
 }
 
 SickSafeVisionary::CallbackReturn SickSafeVisionary::on_deactivate(
   [[maybe_unused]] const rclcpp_lifecycle::State & previous_state)
 {
+  data_publisher_.deactivate();
   return CallbackReturn::SUCCESS;
 }
 
@@ -101,8 +107,8 @@ void SickSafeVisionary::reset()
     publish_thread_.join();
   }
   data_stream_->closeUdpConnection();
-}
 
-void SickSafeVisionary::publish() { RCLCPP_INFO(this->get_logger(), "got new data to publish"); }
+  data_publisher_.reset();
+}
 
 }  // namespace sick

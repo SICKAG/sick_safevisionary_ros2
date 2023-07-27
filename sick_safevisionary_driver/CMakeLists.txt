@@ -8,6 +8,7 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(lifecycle_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(sick_safevisionary_base REQUIRED)
@@ -17,6 +18,7 @@ find_package(Boost REQUIRED COMPONENTS)
 # Build
 #--------------------------------------------------------------------------------
 add_executable(driver_node
+  src/compound_publisher.cpp
   src/sick_safevisionary.cpp
   src/driver_node.cpp
 )
@@ -27,6 +29,7 @@ target_include_directories(driver_node PUBLIC
 
 ament_target_dependencies(driver_node
   lifecycle_msgs
+  sensor_msgs
   rclcpp
   rclcpp_lifecycle
 )
