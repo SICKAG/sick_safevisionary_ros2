@@ -10,7 +10,7 @@
  */
 //-----------------------------------------------------------------------------
 
-#include "sick_safevisionary_ros2/sick_safevisionary.hpp"
+#include "sick_safevisionary_driver/sick_safevisionary.hpp"
 
 int main(int argc, char ** argv)
 {
