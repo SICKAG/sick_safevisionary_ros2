@@ -109,6 +109,20 @@ class IntegrationTest(unittest.TestCase):
             "The inactive driver shuts down correctly.",
         )
 
+    def test_driver_reset(self):
+        """Test if the driver supports resets
+
+        We repetitively call `configure` and `cleanup` and check if that works.
+        """
+        for _ in range(3):
+            self.change_state(Transition.TRANSITION_CONFIGURE)
+            self.change_state(Transition.TRANSITION_CLEANUP)
+
+        self.assertTrue(
+            self.check_state(State.PRIMARY_STATE_UNCONFIGURED),
+            "The driver supports repetitive resets.",
+        )
+
     def change_state(self, transition_id):
         """Change the driver's current state
 

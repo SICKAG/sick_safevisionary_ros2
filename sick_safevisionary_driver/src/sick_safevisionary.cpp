@@ -26,7 +26,8 @@ SickSafeVisionary::CallbackReturn SickSafeVisionary::on_configure(
   [[maybe_unused]] const rclcpp_lifecycle::State & previous_state)
 {
   // Setup UDP connection to the camera
-  int port = this->declare_parameter("port", 6060);
+  int port = (this->has_parameter("port")) ? this->get_parameter("port").as_int()
+                                           : this->declare_parameter("port", 6060);
   data_handle_ = std::make_shared<visionary::SafeVisionaryData>();
   data_stream_ = std::make_shared<visionary::SafeVisionaryDataStream>(data_handle_);
   if (!data_stream_->openUdpConnection(htons(port))) {
