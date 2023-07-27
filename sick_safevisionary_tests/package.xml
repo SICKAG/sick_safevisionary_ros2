@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>sick_safevisionary_tests</name>
+  <version>0.0.0</version>
+  <description>Integration tests for the Sick SafeVisionary2 driver</description>
+  <maintainer email="scherzin@fzi.de">Stefan Scherzinger</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <test_depend>launch</test_depend>
+  <test_depend>launch_ros</test_depend>
+  <test_depend>launch_testing_ament_cmake</test_depend>
+  <test_depend>sick_safevisionary_driver</test_depend>
+
+</package>

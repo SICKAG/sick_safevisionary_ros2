@@ -15,7 +15,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     driver_node = Node(
-        package="sick_safevisionary_ros2",
+        package="sick_safevisionary_driver",
         executable="driver_node",
         # prefix="screen -d -m gdb -command=/home/scherzin/.ros/my_debug_log \
         # --ex run --args",
