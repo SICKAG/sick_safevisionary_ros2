@@ -11,6 +11,7 @@ import rclpy
 from rclpy.node import Node
 from lifecycle_msgs.srv import ChangeState, GetState
 from lifecycle_msgs.msg import Transition, State
+import subprocess
 
 
 def generate_test_description():
@@ -70,7 +71,54 @@ class IntegrationTest(unittest.TestCase):
         if not self.get_state_client.wait_for_service(timeout.nanoseconds / 1e9):
             self.fail("Service /sick_safevisionary/get_state not available")
 
-    def test_lifecycle(self):
+    def test_1_driver_reset(self):
+        """Test if the driver supports resets
+
+        We repetitively call `configure` and `cleanup` and check if that works.
+        """
+        for _ in range(3):
+            self.change_state(Transition.TRANSITION_CONFIGURE)
+            self.change_state(Transition.TRANSITION_CLEANUP)
+
+        self.assertTrue(
+            self.check_state(State.PRIMARY_STATE_UNCONFIGURED),
+            "The driver supports repetitive resets.",
+        )
+
+    def test_2_publishers(self):
+        """Test if all publishers behave correctly
+
+        We check if all relevant topics are advertised after `configure` and
+        whether they disappear after `cleanup`.
+        """
+        topics = [
+            "/camera_info",
+        ]
+
+        def list_topics():
+            advertised = subprocess.check_output(
+                "ros2 topic list", stderr=subprocess.STDOUT, shell=True
+            )
+            return advertised.decode("utf-8").split("\n")
+
+        # After configuration
+        self.change_state(Transition.TRANSITION_CONFIGURE)
+        topic_list = list_topics()
+        for topic in topics:
+            self.assertTrue(
+                topic in topic_list,
+                f"{topic} is advertised correctly after configuration.",
+            )
+
+        # After cleanup
+        self.change_state(Transition.TRANSITION_CLEANUP)
+        topic_list = list_topics()
+        for topic in topics:
+            self.assertTrue(
+                topic not in topic_list, f"{topic} is removed correctly after cleanup."
+            )
+
+    def test_3_lifecycle(self):
         """Test all primary lifecycle states
 
         Test whether `configure` -> `activate` -> `deactivate` -> `shutdown` works.
@@ -107,20 +155,6 @@ class IntegrationTest(unittest.TestCase):
         self.assertTrue(
             self.check_state(State.PRIMARY_STATE_FINALIZED),
             "The inactive driver shuts down correctly.",
-        )
-
-    def test_driver_reset(self):
-        """Test if the driver supports resets
-
-        We repetitively call `configure` and `cleanup` and check if that works.
-        """
-        for _ in range(3):
-            self.change_state(Transition.TRANSITION_CONFIGURE)
-            self.change_state(Transition.TRANSITION_CLEANUP)
-
-        self.assertTrue(
-            self.check_state(State.PRIMARY_STATE_UNCONFIGURED),
-            "The driver supports repetitive resets.",
         )
 
     def change_state(self, transition_id):

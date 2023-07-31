@@ -10,4 +10,9 @@ colcon test --packages-select sick_safevisionary_tests && colcon test-result --v
 ```
 to run and inspect the integration tests locally.
 
+You can clean the test results and outdated errors with
+```bash
+colcon test-result --delete-yes
+```
+
 [1]: https://github.com/ros2/launch/tree/master/launch_testing#quick-start-example
