@@ -20,7 +20,7 @@ def generate_launch_description():
         # prefix="screen -d -m gdb -command=/home/scherzin/.ros/my_debug_log \
         # --ex run --args",
         output="both",
-        parameters=[{"port": 6060}],
+        parameters=[{"port": 6060}, {"frame_id": "camera"}],
     )
 
     return LaunchDescription([driver_node])

@@ -38,6 +38,11 @@ SickSafeVisionary::CallbackReturn SickSafeVisionary::on_configure(
   continue_ = true;
   data_publisher_ = std::make_unique<CompoundPublisher>(this);
 
+  // Parameters
+  if (!this->has_parameter("frame_id")) {
+    this->declare_parameter("frame_id", "camera");
+  };
+
   // Start an asynchronous receive thread with a lock-free producer.
   receive_thread_ = std::thread([&]() {
     while (continue_) {
@@ -58,7 +63,7 @@ SickSafeVisionary::CallbackReturn SickSafeVisionary::on_configure(
         spsc_queue_.pop(data) &&
         this->get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
         auto header = std_msgs::msg::Header();
-        header.frame_id = "camera";
+        header.frame_id = this->get_parameter("frame_id").as_string();
         header.stamp = this->now();
         data_publisher_->publish(header, data);
       } else {
