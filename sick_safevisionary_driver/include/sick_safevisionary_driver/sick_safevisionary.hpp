@@ -72,7 +72,7 @@ private:
     spsc_queue_;
   std::atomic<bool> continue_{false};
 
-  CompoundPublisher data_publisher_;
+  std::unique_ptr<CompoundPublisher> data_publisher_;
 };
 }  // namespace sick
 

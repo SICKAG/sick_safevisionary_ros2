@@ -33,12 +33,12 @@ namespace sick
 class CompoundPublisher
 {
 public:
-  // Support move assignment with a lifecylce node
-  CompoundPublisher() = default;
+  // Support initialization with a lifecylce node
   CompoundPublisher(rclcpp_lifecycle::LifecycleNode * node);
-  CompoundPublisher & operator=(CompoundPublisher &&) = default;
 
   // Limit the rest
+  CompoundPublisher() = delete;
+  CompoundPublisher & operator=(CompoundPublisher &&) = delete;
   CompoundPublisher(const CompoundPublisher & other) = delete;
   CompoundPublisher(CompoundPublisher &&) = delete;
   CompoundPublisher & operator=(const CompoundPublisher &) = delete;
