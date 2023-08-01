@@ -22,7 +22,9 @@ CompoundPublisher::CompoundPublisher(rclcpp_lifecycle::LifecycleNode * node)
 void CompoundPublisher::publish(
   const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & data)
 {
-  publishCameraInfo(header, data);
+  if (camera_info_pub_->get_subscription_count() > 0) {
+    publishCameraInfo(header, data);
+  }
 }
 
 void CompoundPublisher::activate() { camera_info_pub_->on_activate(); }
