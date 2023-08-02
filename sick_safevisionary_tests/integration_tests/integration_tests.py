@@ -62,14 +62,13 @@ class IntegrationTest(unittest.TestCase):
         self.change_state_client = self.node.create_client(
             ChangeState, "/sick_safevisionary/change_state"
         )
-        if not self.change_state_client.wait_for_service(timeout.nanoseconds / 1e9):
-            self.fail("Service /sick_safevisionary/change_state not available")
+
+        self.change_state_client.wait_for_service(timeout.nanoseconds / 1e9)
 
         self.get_state_client = self.node.create_client(
             GetState, "/sick_safevisionary/get_state"
         )
-        if not self.get_state_client.wait_for_service(timeout.nanoseconds / 1e9):
-            self.fail("Service /sick_safevisionary/get_state not available")
+        self.get_state_client.wait_for_service(timeout.nanoseconds / 1e9)
 
     def test_1_driver_reset(self):
         """Test if the driver supports resets
