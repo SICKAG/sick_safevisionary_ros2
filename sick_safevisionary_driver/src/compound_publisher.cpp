@@ -22,6 +22,8 @@ CompoundPublisher::CompoundPublisher(rclcpp_lifecycle::LifecycleNode * node)
   device_status_pub_ =
     node->create_publisher<sick_safevisionary_interfaces::msg::DeviceStatus>("device_status", 1);
   io_pub_ = node->create_publisher<sick_safevisionary_interfaces::msg::CameraIO>("camera_io", 1);
+  roi_pub_ =
+    node->create_publisher<sick_safevisionary_interfaces::msg::ROIArray>("region_of_interest", 1);
 }
 
 void CompoundPublisher::publish(
@@ -42,6 +44,9 @@ void CompoundPublisher::publish(
   if (io_pub_->get_subscription_count() > 0) {
     publishIOs(header, frame_data);
   }
+  if (roi_pub_->get_subscription_count() > 0) {
+    publishROI(header, frame_data);
+  }
 }
 
 void CompoundPublisher::activate()
@@ -51,6 +56,7 @@ void CompoundPublisher::activate()
   imu_pub_->on_activate();
   device_status_pub_->on_activate();
   io_pub_->on_activate();
+  roi_pub_->on_activate();
 }
 
 void CompoundPublisher::deactivate()
@@ -60,6 +66,7 @@ void CompoundPublisher::deactivate()
   imu_pub_->on_deactivate();
   device_status_pub_->on_deactivate();
   io_pub_->on_deactivate();
+  roi_pub_->on_deactivate();
 }
 
 void CompoundPublisher::reset()
@@ -69,6 +76,7 @@ void CompoundPublisher::reset()
   imu_pub_.reset();
   device_status_pub_.reset();
   io_pub_.reset();
+  roi_pub_.reset();
 }
 
 void CompoundPublisher::publishCameraInfo(
@@ -247,5 +255,40 @@ void CompoundPublisher::publishIOs(
   camera_io.dynamic_speed_b = frame_data.getLocalIOData().dynamicSpeedB;
   camera_io.dynamic_valid_flags = frame_data.getLocalIOData().DynamicValidFlags;
   io_pub_->publish(camera_io);
+}
+
+void CompoundPublisher::publishROI(
+  const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data)
+{
+  sick_safevisionary_interfaces::msg::ROIArray roi_array_msg;
+  for (auto & roi : frame_data.getRoiData().roiData) {
+    sick_safevisionary_interfaces::msg::ROI roi_msg;
+    roi_msg.id = roi.id;
+    roi_msg.distance_value = roi.distanceValue;
+    roi_msg.result_data.distance_safe = roi.result.distanceSafe;
+    roi_msg.result_data.distance_valid = roi.result.distanceValid;
+    roi_msg.result_data.result_safe = roi.result.resultSafe;
+    roi_msg.result_data.result_valid = roi.result.resultValid;
+    roi_msg.result_data.task_result = roi.result.taskResult;
+    roi_msg.safety_data.invalid_due_to_invalid_pixels =
+      roi.safetyRelatedData.tMembers.invalidDueToInvalidPixels;
+    roi_msg.safety_data.invalid_due_to_variance =
+      roi.safetyRelatedData.tMembers.invalidDueToVariance;
+    roi_msg.safety_data.invalid_due_to_overexposure =
+      roi.safetyRelatedData.tMembers.invalidDueToOverexposure;
+    roi_msg.safety_data.invalid_due_to_underexposure =
+      roi.safetyRelatedData.tMembers.invalidDueToUnderexposure;
+    roi_msg.safety_data.invalid_due_to_temporal_variance =
+      roi.safetyRelatedData.tMembers.invalidDueToTemporalVariance;
+    roi_msg.safety_data.invalid_due_to_outside_of_measurement_range =
+      roi.safetyRelatedData.tMembers.invalidDueToOutsideOfMeasurementRange;
+    roi_msg.safety_data.invalid_due_to_retro_reflector_interference =
+      roi.safetyRelatedData.tMembers.invalidDueToRetroReflectorInterference;
+    roi_msg.safety_data.contamination_error = roi.safetyRelatedData.tMembers.contaminationError;
+    roi_msg.safety_data.quality_class = roi.safetyRelatedData.tMembers.qualityClass;
+    roi_msg.safety_data.slot_active = roi.safetyRelatedData.tMembers.slotActive;
+    roi_array_msg.rois.push_back(roi_msg);
+  }
+  roi_pub_->publish(roi_array_msg);
 }
 }  // namespace sick
