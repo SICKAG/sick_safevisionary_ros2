@@ -8,6 +8,8 @@ endif()
 # find dependencies
 find_package(Boost REQUIRED COMPONENTS)
 find_package(ament_cmake REQUIRED)
+find_package(cv_bridge REQUIRED)
+find_package(image_transport REQUIRED)
 find_package(lifecycle_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
@@ -29,6 +31,8 @@ target_include_directories(driver_node PUBLIC
   $<INSTALL_INTERFACE:include>)
 
 ament_target_dependencies(driver_node
+  cv_bridge
+  image_transport
   lifecycle_msgs
   rclcpp
   rclcpp_lifecycle

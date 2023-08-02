@@ -27,6 +27,9 @@ CompoundPublisher::CompoundPublisher(rclcpp_lifecycle::LifecycleNode * node)
   field_pub_ =
     node->create_publisher<sick_safevisionary_interfaces::msg::FieldInformationArray>("fields", 1);
 
+  depth_pub_ = node->create_publisher<sensor_msgs::msg::Image>("depth", 1);
+  intensity_pub_ = node->create_publisher<sensor_msgs::msg::Image>("intensity", 1);
+  state_pub_ = node->create_publisher<sensor_msgs::msg::Image>("state", 1);
 }
 
 void CompoundPublisher::publish(
@@ -53,6 +56,15 @@ void CompoundPublisher::publish(
   if (field_pub_->get_subscription_count() > 0) {
     publishFieldInformation(header, frame_data);
   }
+  if (depth_pub_->get_subscription_count() > 0) {
+    publishDepthImage(header, frame_data);
+  }
+  if (intensity_pub_->get_subscription_count() > 0) {
+    publishIntensityImage(header, frame_data);
+  }
+  if (state_pub_->get_subscription_count() > 0) {
+    publishStateMap(header, frame_data);
+  }
 }
 
 void CompoundPublisher::activate()
@@ -64,6 +76,9 @@ void CompoundPublisher::activate()
   io_pub_->on_activate();
   roi_pub_->on_activate();
   field_pub_->on_activate();
+  depth_pub_->on_activate();
+  intensity_pub_->on_activate();
+  state_pub_->on_activate();
 }
 
 void CompoundPublisher::deactivate()
@@ -75,6 +90,9 @@ void CompoundPublisher::deactivate()
   io_pub_->on_deactivate();
   roi_pub_->on_deactivate();
   field_pub_->on_deactivate();
+  depth_pub_->on_deactivate();
+  intensity_pub_->on_deactivate();
+  state_pub_->on_deactivate();
 }
 
 void CompoundPublisher::reset()
@@ -86,6 +104,9 @@ void CompoundPublisher::reset()
   io_pub_.reset();
   roi_pub_.reset();
   field_pub_.reset();
+  depth_pub_.reset();
+  intensity_pub_.reset();
+  state_pub_.reset();
 }
 
 void CompoundPublisher::publishCameraInfo(
@@ -178,6 +199,41 @@ void CompoundPublisher::publishIMUData(
   imu_msg.orientation.z = frame_data.getIMUData().orientation.Z;
   imu_msg.orientation.w = frame_data.getIMUData().orientation.W;
   imu_pub_->publish(imu_msg);
+}
+
+void CompoundPublisher::publishDepthImage(
+  const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data)
+{
+  depth_pub_->publish(*Vec16ToImage(header, frame_data, frame_data.getDistanceMap()));
+}
+
+void CompoundPublisher::publishIntensityImage(
+  const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data)
+{
+  intensity_pub_->publish(*Vec16ToImage(header, frame_data, frame_data.getIntensityMap()));
+}
+
+void CompoundPublisher::publishStateMap(
+  const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data)
+{
+  state_pub_->publish(*Vec8ToImage(header, frame_data, frame_data.getStateMap()));
+}
+
+sensor_msgs::msg::Image::SharedPtr CompoundPublisher::Vec16ToImage(
+  const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data,
+  std::vector<uint16_t> vec)
+{
+  cv::Mat image = cv::Mat(frame_data.getHeight(), frame_data.getWidth(), CV_16UC1);
+  std::memcpy(image.data, vec.data(), vec.size() * sizeof(uint16_t));
+  return cv_bridge::CvImage(header, sensor_msgs::image_encodings::TYPE_16UC1, image).toImageMsg();
+}
+sensor_msgs::msg::Image::SharedPtr CompoundPublisher::Vec8ToImage(
+  const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data,
+  std::vector<uint8_t> vec)
+{
+  cv::Mat image = cv::Mat(frame_data.getHeight(), frame_data.getWidth(), CV_8UC1);
+  std::memcpy(image.data, vec.data(), vec.size() * sizeof(uint8_t));
+  return cv_bridge::CvImage(header, sensor_msgs::image_encodings::TYPE_8UC1, image).toImageMsg();
 }
 
 void CompoundPublisher::publishDeviceStatus(

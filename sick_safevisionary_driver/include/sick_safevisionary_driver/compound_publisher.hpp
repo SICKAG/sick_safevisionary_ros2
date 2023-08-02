@@ -15,6 +15,9 @@
 
 #include <memory>
 
+#include "cv_bridge/cv_bridge.h"
+#include "image_transport/image_transport.h"
+#include "opencv2/opencv.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "rclcpp_lifecycle/lifecycle_publisher.hpp"
 #include "sensor_msgs/msg/camera_info.hpp"
@@ -98,6 +101,24 @@ private:
 
   void publishFieldInformation(
     const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data);
+
+  void publishDepthImage(
+    const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data);
+
+  void publishIntensityImage(
+    const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data);
+
+  void publishStateMap(
+    const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data);
+
+  sensor_msgs::msg::Image::SharedPtr Vec16ToImage(
+    const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data,
+    std::vector<uint16_t> vec);
+
+  sensor_msgs::msg::Image::SharedPtr Vec8ToImage(
+    const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data,
+    std::vector<uint8_t> vec);
+
   std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<sensor_msgs::msg::CameraInfo>>
     camera_info_pub_;
   std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<sensor_msgs::msg::PointCloud2>>
@@ -117,6 +138,9 @@ private:
     rclcpp_lifecycle::LifecyclePublisher<sick_safevisionary_interfaces::msg::FieldInformationArray>>
     field_pub_;
 
+  std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<sensor_msgs::msg::Image>> depth_pub_;
+  std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<sensor_msgs::msg::Image>> intensity_pub_;
+  std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<sensor_msgs::msg::Image>> state_pub_;
 };
 
 }  // namespace sick
