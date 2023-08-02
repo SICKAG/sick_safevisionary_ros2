@@ -20,6 +20,8 @@
 #include "sensor_msgs/msg/camera_info.hpp"
 #include "sensor_msgs/msg/detail/camera_info__struct.hpp"
 #include "sensor_msgs/msg/imu.hpp"
+#include "sensor_msgs/msg/point_cloud2.hpp"
+#include "sick_safevisionary_base/PointXYZ.h"
 #include "sick_safevisionary_base/SafeVisionaryData.h"
 #include "std_msgs/msg/header.hpp"
 
@@ -74,12 +76,16 @@ public:
 private:
   void publishCameraInfo(
     const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & data);
+  void publishPointCloud(
+    const std_msgs::msg::Header & header, visionary::SafeVisionaryData & frame_data);
   void publishIMUData(
     const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data);
 
 
   std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<sensor_msgs::msg::CameraInfo>>
     camera_info_pub_;
+  std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<sensor_msgs::msg::PointCloud2>>
+    pointcloud_pub_;
   std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<sensor_msgs::msg::Imu>> imu_pub_;
 };
 
