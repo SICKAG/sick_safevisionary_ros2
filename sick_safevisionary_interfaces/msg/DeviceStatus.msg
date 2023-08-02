@@ -1,0 +1,8 @@
+# ROS msg definition for internal DEVICE_STATUS struct
+uint8 status
+GeneralStatus general_status
+uint32 cop_safety_related
+uint32 cop_non_safety_related
+uint32 cop_reset_required
+ActiveMonitoringCase active_monitoring_case
+uint8 contamination_level
