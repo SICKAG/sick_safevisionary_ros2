@@ -21,6 +21,7 @@ CompoundPublisher::CompoundPublisher(rclcpp_lifecycle::LifecycleNode * node)
   imu_pub_ = node->create_publisher<sensor_msgs::msg::Imu>("imu_data", 1);
   device_status_pub_ =
     node->create_publisher<sick_safevisionary_interfaces::msg::DeviceStatus>("device_status", 1);
+  io_pub_ = node->create_publisher<sick_safevisionary_interfaces::msg::CameraIO>("camera_io", 1);
 }
 
 void CompoundPublisher::publish(
@@ -38,6 +39,9 @@ void CompoundPublisher::publish(
   if (device_status_pub_->get_subscription_count() > 0) {
     publishDeviceStatus(header, frame_data);
   }
+  if (io_pub_->get_subscription_count() > 0) {
+    publishIOs(header, frame_data);
+  }
 }
 
 void CompoundPublisher::activate()
@@ -46,6 +50,7 @@ void CompoundPublisher::activate()
   pointcloud_pub_->on_activate();
   imu_pub_->on_activate();
   device_status_pub_->on_activate();
+  io_pub_->on_activate();
 }
 
 void CompoundPublisher::deactivate()
@@ -54,6 +59,7 @@ void CompoundPublisher::deactivate()
   pointcloud_pub_->on_deactivate();
   imu_pub_->on_deactivate();
   device_status_pub_->on_deactivate();
+  io_pub_->on_deactivate();
 }
 
 void CompoundPublisher::reset()
@@ -62,6 +68,7 @@ void CompoundPublisher::reset()
   pointcloud_pub_.reset();
   imu_pub_.reset();
   device_status_pub_.reset();
+  io_pub_.reset();
 }
 
 void CompoundPublisher::publishCameraInfo(
@@ -191,5 +198,54 @@ void CompoundPublisher::publishDeviceStatus(
     frame_data.getDeviceStatusData().activeMonitoringCase.currentCaseNumberMonitoringCase4;
   status.contamination_level = frame_data.getDeviceStatusData().contaminationLevel;
   device_status_pub_->publish(status);
+}
+
+void CompoundPublisher::publishIOs(
+  const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data)
+{
+  sick_safevisionary_interfaces::msg::CameraIO camera_io;
+  camera_io.configured.pin_5 =
+    frame_data.getLocalIOData().universalIOConfigured.configuredUniIOPin5;
+  camera_io.configured.pin_6 =
+    frame_data.getLocalIOData().universalIOConfigured.configuredUniIOPin6;
+  camera_io.configured.pin_7 =
+    frame_data.getLocalIOData().universalIOConfigured.configuredUniIOPin7;
+  camera_io.configured.pin_8 =
+    frame_data.getLocalIOData().universalIOConfigured.configuredUniIOPin8;
+  camera_io.direction.pin_5 =
+    frame_data.getLocalIOData().universalIODirection.directionValueUniIOPin5;
+  camera_io.direction.pin_6 =
+    frame_data.getLocalIOData().universalIODirection.directionValueUniIOPin6;
+  camera_io.direction.pin_7 =
+    frame_data.getLocalIOData().universalIODirection.directionValueUniIOPin7;
+  camera_io.direction.pin_8 =
+    frame_data.getLocalIOData().universalIODirection.directionValueUniIOPin8;
+  camera_io.input_values.pin_5 =
+    frame_data.getLocalIOData().universalIOInputValue.logicalValueUniIOPin5;
+  camera_io.input_values.pin_6 =
+    frame_data.getLocalIOData().universalIOInputValue.logicalValueUniIOPin6;
+  camera_io.input_values.pin_7 =
+    frame_data.getLocalIOData().universalIOInputValue.logicalValueUniIOPin7;
+  camera_io.input_values.pin_8 =
+    frame_data.getLocalIOData().universalIOInputValue.logicalValueUniIOPin8;
+  camera_io.output_values.pin_5 =
+    frame_data.getLocalIOData().universalIOOutputValue.localOutput1Pin5;
+  camera_io.output_values.pin_6 =
+    frame_data.getLocalIOData().universalIOOutputValue.localOutput2Pin6;
+  camera_io.output_values.pin_7 =
+    frame_data.getLocalIOData().universalIOOutputValue.localOutput3Pin7;
+  camera_io.output_values.pin_8 =
+    frame_data.getLocalIOData().universalIOOutputValue.localOutput4Pin8;
+  camera_io.ossds_state.ossd1a = frame_data.getLocalIOData().ossdsState.stateOSSD1A;
+  camera_io.ossds_state.ossd1b = frame_data.getLocalIOData().ossdsState.stateOSSD1B;
+  camera_io.ossds_state.ossd2a = frame_data.getLocalIOData().ossdsState.stateOSSD2A;
+  camera_io.ossds_state.ossd2b = frame_data.getLocalIOData().ossdsState.stateOSSD2B;
+  camera_io.ossds_dyn_count = frame_data.getLocalIOData().ossdsDynCount;
+  camera_io.ossds_crc = frame_data.getLocalIOData().ossdsCRC;
+  camera_io.ossds_io_status = frame_data.getLocalIOData().ossdsIOStatus;
+  camera_io.dynamic_speed_a = frame_data.getLocalIOData().dynamicSpeedA;
+  camera_io.dynamic_speed_b = frame_data.getLocalIOData().dynamicSpeedB;
+  camera_io.dynamic_valid_flags = frame_data.getLocalIOData().DynamicValidFlags;
+  io_pub_->publish(camera_io);
 }
 }  // namespace sick
