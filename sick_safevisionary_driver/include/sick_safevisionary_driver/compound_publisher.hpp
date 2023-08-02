@@ -52,7 +52,7 @@ public:
      * @param header Header for this data
      * @param data The sensor's data to publish
      */
-  void publish(const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & data);
+  void publish(const std_msgs::msg::Header & header, visionary::SafeVisionaryData & frame_data);
 
   /**
      * @brief Call this function in the lifecycle node's `on_activate`.
@@ -75,7 +75,7 @@ public:
 
 private:
   void publishCameraInfo(
-    const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & data);
+    const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data);
   void publishPointCloud(
     const std_msgs::msg::Header & header, visionary::SafeVisionaryData & frame_data);
   void publishIMUData(

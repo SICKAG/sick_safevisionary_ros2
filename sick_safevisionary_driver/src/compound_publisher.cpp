@@ -16,22 +16,22 @@ namespace sick
 {
 CompoundPublisher::CompoundPublisher(rclcpp_lifecycle::LifecycleNode * node)
 {
-  camera_info_pub_ = node->create_publisher<sensor_msgs::msg::CameraInfo>("camera_info", 3);
+  camera_info_pub_ = node->create_publisher<sensor_msgs::msg::CameraInfo>("camera_info", 1);
   pointcloud_pub_ = node->create_publisher<sensor_msgs::msg::PointCloud2>("points", 1);
   imu_pub_ = node->create_publisher<sensor_msgs::msg::Imu>("imu_data", 1);
 }
 
 void CompoundPublisher::publish(
-  const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & data)
+  const std_msgs::msg::Header & header, visionary::SafeVisionaryData & frame_data)
 {
   if (camera_info_pub_->get_subscription_count() > 0) {
-    publishCameraInfo(header, data);
+    publishCameraInfo(header, frame_data);
   }
   if (pointcloud_pub_->get_subscription_count() > 0) {
-    publishPointCloud(header, data);
+    publishPointCloud(header, frame_data);
   }
   if (imu_pub_->get_subscription_count() > 0) {
-    publishIMUData(header, data);
+    publishIMUData(header, frame_data);
   }
 }
 
@@ -57,23 +57,23 @@ void CompoundPublisher::reset()
 }
 
 void CompoundPublisher::publishCameraInfo(
-  const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & data)
+  const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data)
 {
   auto camera_info = sensor_msgs::msg::CameraInfo();
   camera_info.header = header;
-  camera_info.height = data.getHeight();
-  camera_info.width = data.getWidth();
+  camera_info.height = frame_data.getHeight();
+  camera_info.width = frame_data.getWidth();
   camera_info.d = std::vector<double>(5, 0);
-  camera_info.d[0] = data.getCameraParameters().k1;
-  camera_info.d[1] = data.getCameraParameters().k2;
-  camera_info.d[2] = data.getCameraParameters().p1;
-  camera_info.d[3] = data.getCameraParameters().p2;
-  camera_info.d[4] = data.getCameraParameters().k3;
+  camera_info.d[0] = frame_data.getCameraParameters().k1;
+  camera_info.d[1] = frame_data.getCameraParameters().k2;
+  camera_info.d[2] = frame_data.getCameraParameters().p1;
+  camera_info.d[3] = frame_data.getCameraParameters().p2;
+  camera_info.d[4] = frame_data.getCameraParameters().k3;
 
-  camera_info.k[0] = data.getCameraParameters().fx;
-  camera_info.k[2] = data.getCameraParameters().cx;
-  camera_info.k[4] = data.getCameraParameters().fy;
-  camera_info.k[5] = data.getCameraParameters().cy;
+  camera_info.k[0] = frame_data.getCameraParameters().fx;
+  camera_info.k[2] = frame_data.getCameraParameters().cx;
+  camera_info.k[4] = frame_data.getCameraParameters().fy;
+  camera_info.k[5] = frame_data.getCameraParameters().cy;
   camera_info.k[8] = 1;
   camera_info_pub_->publish(camera_info);
 }
