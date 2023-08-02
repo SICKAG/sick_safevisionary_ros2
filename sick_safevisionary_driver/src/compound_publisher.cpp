@@ -19,6 +19,8 @@ CompoundPublisher::CompoundPublisher(rclcpp_lifecycle::LifecycleNode * node)
   camera_info_pub_ = node->create_publisher<sensor_msgs::msg::CameraInfo>("camera_info", 1);
   pointcloud_pub_ = node->create_publisher<sensor_msgs::msg::PointCloud2>("points", 1);
   imu_pub_ = node->create_publisher<sensor_msgs::msg::Imu>("imu_data", 1);
+  device_status_pub_ =
+    node->create_publisher<sick_safevisionary_interfaces::msg::DeviceStatus>("device_status", 1);
 }
 
 void CompoundPublisher::publish(
@@ -33,6 +35,9 @@ void CompoundPublisher::publish(
   if (imu_pub_->get_subscription_count() > 0) {
     publishIMUData(header, frame_data);
   }
+  if (device_status_pub_->get_subscription_count() > 0) {
+    publishDeviceStatus(header, frame_data);
+  }
 }
 
 void CompoundPublisher::activate()
@@ -40,6 +45,7 @@ void CompoundPublisher::activate()
   camera_info_pub_->on_activate();
   pointcloud_pub_->on_activate();
   imu_pub_->on_activate();
+  device_status_pub_->on_activate();
 }
 
 void CompoundPublisher::deactivate()
@@ -47,6 +53,7 @@ void CompoundPublisher::deactivate()
   camera_info_pub_->on_deactivate();
   pointcloud_pub_->on_deactivate();
   imu_pub_->on_deactivate();
+  device_status_pub_->on_deactivate();
 }
 
 void CompoundPublisher::reset()
@@ -54,6 +61,7 @@ void CompoundPublisher::reset()
   camera_info_pub_.reset();
   pointcloud_pub_.reset();
   imu_pub_.reset();
+  device_status_pub_.reset();
 }
 
 void CompoundPublisher::publishCameraInfo(
@@ -146,5 +154,42 @@ void CompoundPublisher::publishIMUData(
   imu_msg.orientation.z = frame_data.getIMUData().orientation.Z;
   imu_msg.orientation.w = frame_data.getIMUData().orientation.W;
   imu_pub_->publish(imu_msg);
+}
+
+void CompoundPublisher::publishDeviceStatus(
+  const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data)
+{
+  sick_safevisionary_interfaces::msg::DeviceStatus status;
+  status.status = static_cast<uint8_t>(frame_data.getDeviceStatus());
+  status.general_status.application_error =
+    frame_data.getDeviceStatusData().generalStatus.applicationError;
+  status.general_status.contamination_error =
+    frame_data.getDeviceStatusData().generalStatus.contaminationError;
+  status.general_status.contamination_warning =
+    frame_data.getDeviceStatusData().generalStatus.contaminationWarning;
+  status.general_status.dead_zone_detection =
+    frame_data.getDeviceStatusData().generalStatus.deadZoneDetection;
+  status.general_status.device_error = frame_data.getDeviceStatusData().generalStatus.deviceError;
+  status.general_status.temperature_warning =
+    frame_data.getDeviceStatusData().generalStatus.temperatureWarning;
+  status.general_status.run_mode_active =
+    frame_data.getDeviceStatusData().generalStatus.runModeActive;
+  status.general_status.wait_for_cluster =
+    frame_data.getDeviceStatusData().generalStatus.waitForCluster;
+  status.general_status.wait_for_input =
+    frame_data.getDeviceStatusData().generalStatus.waitForInput;
+  status.cop_non_safety_related = frame_data.getDeviceStatusData().COPNonSaftyRelated;
+  status.cop_safety_related = frame_data.getDeviceStatusData().COPSaftyRelated;
+  status.cop_reset_required = frame_data.getDeviceStatusData().COPResetRequired;
+  status.active_monitoring_case.monitoring_case_1 =
+    frame_data.getDeviceStatusData().activeMonitoringCase.currentCaseNumberMonitoringCase1;
+  status.active_monitoring_case.monitoring_case_2 =
+    frame_data.getDeviceStatusData().activeMonitoringCase.currentCaseNumberMonitoringCase2;
+  status.active_monitoring_case.monitoring_case_3 =
+    frame_data.getDeviceStatusData().activeMonitoringCase.currentCaseNumberMonitoringCase3;
+  status.active_monitoring_case.monitoring_case_4 =
+    frame_data.getDeviceStatusData().activeMonitoringCase.currentCaseNumberMonitoringCase4;
+  status.contamination_level = frame_data.getDeviceStatusData().contaminationLevel;
+  device_status_pub_->publish(status);
 }
 }  // namespace sick

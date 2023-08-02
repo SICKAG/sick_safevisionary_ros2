@@ -13,6 +13,7 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(sick_safevisionary_base REQUIRED)
+find_package(sick_safevisionary_interfaces REQUIRED)
 
 #--------------------------------------------------------------------------------
 # Build
@@ -32,6 +33,7 @@ ament_target_dependencies(driver_node
   rclcpp
   rclcpp_lifecycle
   sensor_msgs
+  sick_safevisionary_interfaces
 )
 
 target_link_libraries(driver_node

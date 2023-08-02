@@ -23,6 +23,7 @@
 #include "sensor_msgs/msg/point_cloud2.hpp"
 #include "sick_safevisionary_base/PointXYZ.h"
 #include "sick_safevisionary_base/SafeVisionaryData.h"
+#include "sick_safevisionary_interfaces/msg/device_status.hpp"
 #include "std_msgs/msg/header.hpp"
 
 namespace sick
@@ -81,12 +82,17 @@ private:
   void publishIMUData(
     const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data);
 
+  void publishDeviceStatus(
+    const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data);
 
   std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<sensor_msgs::msg::CameraInfo>>
     camera_info_pub_;
   std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<sensor_msgs::msg::PointCloud2>>
     pointcloud_pub_;
   std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<sensor_msgs::msg::Imu>> imu_pub_;
+  std::shared_ptr<
+    rclcpp_lifecycle::LifecyclePublisher<sick_safevisionary_interfaces::msg::DeviceStatus>>
+    device_status_pub_;
 };
 
 }  // namespace sick
