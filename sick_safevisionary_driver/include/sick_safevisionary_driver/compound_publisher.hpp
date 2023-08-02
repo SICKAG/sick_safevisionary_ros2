@@ -25,6 +25,7 @@
 #include "sick_safevisionary_base/SafeVisionaryData.h"
 #include "sick_safevisionary_interfaces/msg/camera_io.hpp"
 #include "sick_safevisionary_interfaces/msg/device_status.hpp"
+#include "sick_safevisionary_interfaces/msg/field_information_array.hpp"
 #include "sick_safevisionary_interfaces/msg/roi_array.hpp"
 #include "std_msgs/msg/header.hpp"
 
@@ -79,8 +80,10 @@ public:
 private:
   void publishCameraInfo(
     const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data);
+
   void publishPointCloud(
     const std_msgs::msg::Header & header, visionary::SafeVisionaryData & frame_data);
+
   void publishIMUData(
     const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data);
 
@@ -89,7 +92,11 @@ private:
 
   void publishIOs(
     const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data);
+
   void publishROI(
+    const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data);
+
+  void publishFieldInformation(
     const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data);
   std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<sensor_msgs::msg::CameraInfo>>
     camera_info_pub_;
@@ -105,6 +112,10 @@ private:
   std::shared_ptr<
     rclcpp_lifecycle::LifecyclePublisher<sick_safevisionary_interfaces::msg::ROIArray>>
     roi_pub_;
+
+  std::shared_ptr<
+    rclcpp_lifecycle::LifecyclePublisher<sick_safevisionary_interfaces::msg::FieldInformationArray>>
+    field_pub_;
 
 };
 

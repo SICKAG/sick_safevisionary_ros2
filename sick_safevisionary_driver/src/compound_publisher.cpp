@@ -24,6 +24,9 @@ CompoundPublisher::CompoundPublisher(rclcpp_lifecycle::LifecycleNode * node)
   io_pub_ = node->create_publisher<sick_safevisionary_interfaces::msg::CameraIO>("camera_io", 1);
   roi_pub_ =
     node->create_publisher<sick_safevisionary_interfaces::msg::ROIArray>("region_of_interest", 1);
+  field_pub_ =
+    node->create_publisher<sick_safevisionary_interfaces::msg::FieldInformationArray>("fields", 1);
+
 }
 
 void CompoundPublisher::publish(
@@ -47,6 +50,9 @@ void CompoundPublisher::publish(
   if (roi_pub_->get_subscription_count() > 0) {
     publishROI(header, frame_data);
   }
+  if (field_pub_->get_subscription_count() > 0) {
+    publishFieldInformation(header, frame_data);
+  }
 }
 
 void CompoundPublisher::activate()
@@ -57,6 +63,7 @@ void CompoundPublisher::activate()
   device_status_pub_->on_activate();
   io_pub_->on_activate();
   roi_pub_->on_activate();
+  field_pub_->on_activate();
 }
 
 void CompoundPublisher::deactivate()
@@ -67,6 +74,7 @@ void CompoundPublisher::deactivate()
   device_status_pub_->on_deactivate();
   io_pub_->on_deactivate();
   roi_pub_->on_deactivate();
+  field_pub_->on_deactivate();
 }
 
 void CompoundPublisher::reset()
@@ -77,6 +85,7 @@ void CompoundPublisher::reset()
   device_status_pub_.reset();
   io_pub_.reset();
   roi_pub_.reset();
+  field_pub_.reset();
 }
 
 void CompoundPublisher::publishCameraInfo(
@@ -291,4 +300,21 @@ void CompoundPublisher::publishROI(
   }
   roi_pub_->publish(roi_array_msg);
 }
+
+void CompoundPublisher::publishFieldInformation(
+  const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data)
+{
+  sick_safevisionary_interfaces::msg::FieldInformationArray field_array_msg;
+  for (auto & field : frame_data.getFieldInformationData().fieldInformation) {
+    sick_safevisionary_interfaces::msg::FieldInformation field_msg;
+    field_msg.field_id = field.fieldID;
+    field_msg.field_set_id = field.fieldSetID;
+    field_msg.field_active = field.fieldActive;
+    field_msg.field_result = field.fieldResult;
+    field_msg.eval_method = field.evalMethod;
+    field_array_msg.fields.push_back(field_msg);
+  }
+  field_pub_->publish(field_array_msg);
+}
+
 }  // namespace sick
