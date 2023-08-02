@@ -6,13 +6,13 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 # find dependencies
+find_package(Boost REQUIRED COMPONENTS)
 find_package(ament_cmake REQUIRED)
 find_package(lifecycle_msgs REQUIRED)
-find_package(sensor_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
+find_package(sensor_msgs REQUIRED)
 find_package(sick_safevisionary_base REQUIRED)
-find_package(Boost REQUIRED COMPONENTS)
 
 #--------------------------------------------------------------------------------
 # Build
@@ -29,9 +29,9 @@ target_include_directories(driver_node PUBLIC
 
 ament_target_dependencies(driver_node
   lifecycle_msgs
-  sensor_msgs
   rclcpp
   rclcpp_lifecycle
+  sensor_msgs
 )
 
 target_link_libraries(driver_node

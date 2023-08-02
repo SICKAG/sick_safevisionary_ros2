@@ -17,6 +17,7 @@ namespace sick
 CompoundPublisher::CompoundPublisher(rclcpp_lifecycle::LifecycleNode * node)
 {
   camera_info_pub_ = node->create_publisher<sensor_msgs::msg::CameraInfo>("camera_info", 3);
+  imu_pub_ = node->create_publisher<sensor_msgs::msg::Imu>("imu_data", 1);
 }
 
 void CompoundPublisher::publish(
@@ -25,13 +26,28 @@ void CompoundPublisher::publish(
   if (camera_info_pub_->get_subscription_count() > 0) {
     publishCameraInfo(header, data);
   }
+  if (imu_pub_->get_subscription_count() > 0) {
+    publishIMUData(header, data);
+  }
 }
 
-void CompoundPublisher::activate() { camera_info_pub_->on_activate(); }
+void CompoundPublisher::activate()
+{
+  camera_info_pub_->on_activate();
+  imu_pub_->on_activate();
+}
 
-void CompoundPublisher::deactivate() { camera_info_pub_->on_deactivate(); }
+void CompoundPublisher::deactivate()
+{
+  camera_info_pub_->on_deactivate();
+  imu_pub_->on_deactivate();
+}
 
-void CompoundPublisher::reset() { camera_info_pub_.reset(); }
+void CompoundPublisher::reset()
+{
+  camera_info_pub_.reset();
+  imu_pub_.reset();
+}
 
 void CompoundPublisher::publishCameraInfo(
   const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & data)
@@ -55,4 +71,21 @@ void CompoundPublisher::publishCameraInfo(
   camera_info_pub_->publish(camera_info);
 }
 
+void CompoundPublisher::publishIMUData(
+  const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data)
+{
+  sensor_msgs::msg::Imu imu_msg;
+  imu_msg.header = header;
+  imu_msg.angular_velocity.x = frame_data.getIMUData().angularVelocity.X;
+  imu_msg.angular_velocity.y = frame_data.getIMUData().angularVelocity.Y;
+  imu_msg.angular_velocity.z = frame_data.getIMUData().angularVelocity.Z;
+  imu_msg.linear_acceleration.x = frame_data.getIMUData().acceleration.X;
+  imu_msg.linear_acceleration.y = frame_data.getIMUData().acceleration.Y;
+  imu_msg.linear_acceleration.z = frame_data.getIMUData().acceleration.Z;
+  imu_msg.orientation.x = frame_data.getIMUData().orientation.X;
+  imu_msg.orientation.y = frame_data.getIMUData().orientation.Y;
+  imu_msg.orientation.z = frame_data.getIMUData().orientation.Z;
+  imu_msg.orientation.w = frame_data.getIMUData().orientation.W;
+  imu_pub_->publish(imu_msg);
+}
 }  // namespace sick
