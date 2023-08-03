@@ -38,9 +38,6 @@ void CompoundPublisher::publish(
   if (camera_info_pub_->get_subscription_count() > 0) {
     publishCameraInfo(header, frame_data);
   }
-  if (pointcloud_pub_->get_subscription_count() > 0) {
-    publishPointCloud(header, frame_data);
-  }
   if (imu_pub_->get_subscription_count() > 0) {
     publishIMUData(header, frame_data);
   }
@@ -64,6 +61,9 @@ void CompoundPublisher::publish(
   }
   if (state_pub_->get_subscription_count() > 0) {
     publishStateMap(header, frame_data);
+  }
+  if (pointcloud_pub_->get_subscription_count() > 0) {
+    publishPointCloud(header, frame_data);
   }
 }
 
@@ -134,7 +134,7 @@ void CompoundPublisher::publishCameraInfo(
 void CompoundPublisher::publishPointCloud(
   const std_msgs::msg::Header & header, visionary::SafeVisionaryData & frame_data)
 {
-  sensor_msgs::msg::PointCloud2::Ptr cloud_msg(new sensor_msgs::msg::PointCloud2);
+  sensor_msgs::msg::PointCloud2::SharedPtr cloud_msg(new sensor_msgs::msg::PointCloud2);
   cloud_msg->header = header;
   cloud_msg->height = frame_data.getHeight();
   cloud_msg->width = frame_data.getWidth();
