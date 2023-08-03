@@ -9,11 +9,13 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <depend>cv_bridge</depend>
   <depend>lifecycle_msgs</depend>
   <depend>rclcpp</depend>
   <depend>rclcpp_lifecycle</depend>
   <depend>sensor_msgs</depend>
   <depend>sick_safevisionary_base</depend>
+  <depend>sick_safevisionary_interfaces</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

@@ -5,11 +5,15 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
+if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+  message("${PROJECT_NAME}: You did not request a specific build type: selecting 'Release'.")
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
 # find dependencies
 find_package(Boost REQUIRED COMPONENTS)
 find_package(ament_cmake REQUIRED)
 find_package(cv_bridge REQUIRED)
-find_package(image_transport REQUIRED)
 find_package(lifecycle_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
@@ -32,7 +36,6 @@ target_include_directories(driver_node PUBLIC
 
 ament_target_dependencies(driver_node
   cv_bridge
-  image_transport
   lifecycle_msgs
   rclcpp
   rclcpp_lifecycle

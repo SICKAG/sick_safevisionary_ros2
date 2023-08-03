@@ -16,7 +16,6 @@
 #include <memory>
 
 #include "cv_bridge/cv_bridge.h"
-#include "image_transport/image_transport.h"
 #include "opencv2/opencv.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "rclcpp_lifecycle/lifecycle_publisher.hpp"
