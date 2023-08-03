@@ -244,6 +244,7 @@ void CompoundPublisher::publishDeviceStatus(
   const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data)
 {
   sick_safevisionary_interfaces::msg::DeviceStatus status;
+  status.header = header;
   status.status = static_cast<uint8_t>(frame_data.getDeviceStatus());
   status.general_status.application_error =
     frame_data.getDeviceStatusData().generalStatus.applicationError;
@@ -281,6 +282,7 @@ void CompoundPublisher::publishIOs(
   const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data)
 {
   sick_safevisionary_interfaces::msg::CameraIO camera_io;
+  camera_io.header = header;
   camera_io.configured.pin_5 =
     frame_data.getLocalIOData().universalIOConfigured.configuredUniIOPin5;
   camera_io.configured.pin_6 =
@@ -330,6 +332,7 @@ void CompoundPublisher::publishROI(
   const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data)
 {
   sick_safevisionary_interfaces::msg::ROIArray roi_array_msg;
+  roi_array_msg.header = header;
   for (auto & roi : frame_data.getRoiData().roiData) {
     sick_safevisionary_interfaces::msg::ROI roi_msg;
     roi_msg.id = roi.id;
@@ -365,6 +368,7 @@ void CompoundPublisher::publishFieldInformation(
   const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data)
 {
   sick_safevisionary_interfaces::msg::FieldInformationArray field_array_msg;
+  field_array_msg.header = header;
   for (auto & field : frame_data.getFieldInformationData().fieldInformation) {
     sick_safevisionary_interfaces::msg::FieldInformation field_msg;
     field_msg.field_id = field.fieldID;

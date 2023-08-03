@@ -1,4 +1,5 @@
 # ROS msg definition for internal  LOCALIOS_ELEMENT struct
+std_msgs/Header header
 IOConfigured configured
 IODirection direction
 IOInputValues input_values

@@ -1,4 +1,5 @@
 # ROS msg definition for internal DEVICE_STATUS struct
+std_msgs/Header header
 uint8 status
 GeneralStatus general_status
 uint32 cop_safety_related
