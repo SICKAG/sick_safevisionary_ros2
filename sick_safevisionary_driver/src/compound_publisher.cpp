@@ -16,20 +16,20 @@ namespace sick
 {
 CompoundPublisher::CompoundPublisher(rclcpp_lifecycle::LifecycleNode * node)
 {
-  camera_info_pub_ = node->create_publisher<sensor_msgs::msg::CameraInfo>("camera_info", 1);
-  pointcloud_pub_ = node->create_publisher<sensor_msgs::msg::PointCloud2>("points", 1);
-  imu_pub_ = node->create_publisher<sensor_msgs::msg::Imu>("imu_data", 1);
+  camera_info_pub_ = node->create_publisher<sensor_msgs::msg::CameraInfo>("~/camera_info", 1);
+  pointcloud_pub_ = node->create_publisher<sensor_msgs::msg::PointCloud2>("~/points", 1);
+  imu_pub_ = node->create_publisher<sensor_msgs::msg::Imu>("~/imu_data", 1);
   device_status_pub_ =
-    node->create_publisher<sick_safevisionary_interfaces::msg::DeviceStatus>("device_status", 1);
-  io_pub_ = node->create_publisher<sick_safevisionary_interfaces::msg::CameraIO>("camera_io", 1);
+    node->create_publisher<sick_safevisionary_interfaces::msg::DeviceStatus>("~/device_status", 1);
+  io_pub_ = node->create_publisher<sick_safevisionary_interfaces::msg::CameraIO>("~/camera_io", 1);
   roi_pub_ =
-    node->create_publisher<sick_safevisionary_interfaces::msg::ROIArray>("region_of_interest", 1);
-  field_pub_ =
-    node->create_publisher<sick_safevisionary_interfaces::msg::FieldInformationArray>("fields", 1);
+    node->create_publisher<sick_safevisionary_interfaces::msg::ROIArray>("~/region_of_interest", 1);
+  field_pub_ = node->create_publisher<sick_safevisionary_interfaces::msg::FieldInformationArray>(
+    "~/fields", 1);
 
-  depth_pub_ = node->create_publisher<sensor_msgs::msg::Image>("depth", 1);
-  intensity_pub_ = node->create_publisher<sensor_msgs::msg::Image>("intensity", 1);
-  state_pub_ = node->create_publisher<sensor_msgs::msg::Image>("state", 1);
+  depth_pub_ = node->create_publisher<sensor_msgs::msg::Image>("~/depth", 1);
+  intensity_pub_ = node->create_publisher<sensor_msgs::msg::Image>("~/intensity", 1);
+  state_pub_ = node->create_publisher<sensor_msgs::msg::Image>("~/state", 1);
 }
 
 void CompoundPublisher::publish(
