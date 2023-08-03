@@ -14,7 +14,7 @@
 
 namespace sick
 {
-CompoundPublisher::CompoundPublisher(rclcpp_lifecycle::LifecycleNode * node)
+CompoundPublisher::CompoundPublisher(rclcpp_lifecycle::LifecycleNode * node) : node_(node)
 {
   camera_info_pub_ = node->create_publisher<sensor_msgs::msg::CameraInfo>("~/camera_info", 1);
   pointcloud_pub_ = node->create_publisher<sensor_msgs::msg::PointCloud2>("~/points", 1);
@@ -168,9 +168,13 @@ void CompoundPublisher::publishPointCloud(
   frame_data.generatePointCloud(point_vec);
   frame_data.transformPointCloud(point_vec);
 
+  if (frame_data.getIntensityMap().size() != point_vec.size()) {
+    RCLCPP_ERROR(node_->get_logger(), "Missmatched point and intensity data.");
+    return;
+  }
+
   std::vector<uint16_t>::const_iterator intensity_it = frame_data.getIntensityMap().begin();
   std::vector<visionary::PointXYZ>::const_iterator point_it = point_vec.begin();
-  // TODO check if both vector sizes align
 
   for (size_t i = 0; i < point_vec.size(); ++i, ++intensity_it, ++point_it) {
     memcpy(

@@ -118,6 +118,8 @@ private:
     const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data,
     std::vector<uint8_t> vec);
 
+  rclcpp_lifecycle::LifecycleNode * node_;
+
   std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<sensor_msgs::msg::CameraInfo>>
     camera_info_pub_;
   std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<sensor_msgs::msg::PointCloud2>>
