@@ -243,89 +243,90 @@ sensor_msgs::msg::Image::SharedPtr CompoundPublisher::Vec8ToImage(
 void CompoundPublisher::publishDeviceStatus(
   const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data)
 {
-  sick_safevisionary_interfaces::msg::DeviceStatus status;
-  status.header = header;
-  status.status = static_cast<uint8_t>(frame_data.getDeviceStatus());
-  status.general_status.application_error =
+  sick_safevisionary_interfaces::msg::DeviceStatus device_status_msg;
+  device_status_msg.header = header;
+  device_status_msg.status = static_cast<uint8_t>(frame_data.getDeviceStatus());
+  device_status_msg.general_status.application_error =
     frame_data.getDeviceStatusData().generalStatus.applicationError;
-  status.general_status.contamination_error =
+  device_status_msg.general_status.contamination_error =
     frame_data.getDeviceStatusData().generalStatus.contaminationError;
-  status.general_status.contamination_warning =
+  device_status_msg.general_status.contamination_warning =
     frame_data.getDeviceStatusData().generalStatus.contaminationWarning;
-  status.general_status.dead_zone_detection =
+  device_status_msg.general_status.dead_zone_detection =
     frame_data.getDeviceStatusData().generalStatus.deadZoneDetection;
-  status.general_status.device_error = frame_data.getDeviceStatusData().generalStatus.deviceError;
-  status.general_status.temperature_warning =
+  device_status_msg.general_status.device_error =
+    frame_data.getDeviceStatusData().generalStatus.deviceError;
+  device_status_msg.general_status.temperature_warning =
     frame_data.getDeviceStatusData().generalStatus.temperatureWarning;
-  status.general_status.run_mode_active =
+  device_status_msg.general_status.run_mode_active =
     frame_data.getDeviceStatusData().generalStatus.runModeActive;
-  status.general_status.wait_for_cluster =
+  device_status_msg.general_status.wait_for_cluster =
     frame_data.getDeviceStatusData().generalStatus.waitForCluster;
-  status.general_status.wait_for_input =
+  device_status_msg.general_status.wait_for_input =
     frame_data.getDeviceStatusData().generalStatus.waitForInput;
-  status.cop_non_safety_related = frame_data.getDeviceStatusData().COPNonSaftyRelated;
-  status.cop_safety_related = frame_data.getDeviceStatusData().COPSaftyRelated;
-  status.cop_reset_required = frame_data.getDeviceStatusData().COPResetRequired;
-  status.active_monitoring_case.monitoring_case_1 =
+  device_status_msg.cop_non_safety_related = frame_data.getDeviceStatusData().COPNonSaftyRelated;
+  device_status_msg.cop_safety_related = frame_data.getDeviceStatusData().COPSaftyRelated;
+  device_status_msg.cop_reset_required = frame_data.getDeviceStatusData().COPResetRequired;
+  device_status_msg.active_monitoring_case.monitoring_case_1 =
     frame_data.getDeviceStatusData().activeMonitoringCase.currentCaseNumberMonitoringCase1;
-  status.active_monitoring_case.monitoring_case_2 =
+  device_status_msg.active_monitoring_case.monitoring_case_2 =
     frame_data.getDeviceStatusData().activeMonitoringCase.currentCaseNumberMonitoringCase2;
-  status.active_monitoring_case.monitoring_case_3 =
+  device_status_msg.active_monitoring_case.monitoring_case_3 =
     frame_data.getDeviceStatusData().activeMonitoringCase.currentCaseNumberMonitoringCase3;
-  status.active_monitoring_case.monitoring_case_4 =
+  device_status_msg.active_monitoring_case.monitoring_case_4 =
     frame_data.getDeviceStatusData().activeMonitoringCase.currentCaseNumberMonitoringCase4;
-  status.contamination_level = frame_data.getDeviceStatusData().contaminationLevel;
-  device_status_pub_->publish(status);
+  device_status_msg.contamination_level = frame_data.getDeviceStatusData().contaminationLevel;
+  device_status_pub_->publish(device_status_msg);
 }
 
 void CompoundPublisher::publishIOs(
   const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data)
 {
-  sick_safevisionary_interfaces::msg::CameraIO camera_io;
-  camera_io.header = header;
-  camera_io.configured.pin_5 =
+  sick_safevisionary_interfaces::msg::CameraIO camera_io_msg;
+  camera_io_msg.header = header;
+  camera_io_msg.configured.pin_5 =
     frame_data.getLocalIOData().universalIOConfigured.configuredUniIOPin5;
-  camera_io.configured.pin_6 =
+  camera_io_msg.configured.pin_6 =
     frame_data.getLocalIOData().universalIOConfigured.configuredUniIOPin6;
-  camera_io.configured.pin_7 =
+  camera_io_msg.configured.pin_7 =
     frame_data.getLocalIOData().universalIOConfigured.configuredUniIOPin7;
-  camera_io.configured.pin_8 =
+  camera_io_msg.configured.pin_8 =
     frame_data.getLocalIOData().universalIOConfigured.configuredUniIOPin8;
-  camera_io.direction.pin_5 =
+  camera_io_msg.direction.pin_5 =
     frame_data.getLocalIOData().universalIODirection.directionValueUniIOPin5;
-  camera_io.direction.pin_6 =
+  camera_io_msg.direction.pin_6 =
     frame_data.getLocalIOData().universalIODirection.directionValueUniIOPin6;
-  camera_io.direction.pin_7 =
+  camera_io_msg.direction.pin_7 =
     frame_data.getLocalIOData().universalIODirection.directionValueUniIOPin7;
-  camera_io.direction.pin_8 =
+  camera_io_msg.direction.pin_8 =
     frame_data.getLocalIOData().universalIODirection.directionValueUniIOPin8;
-  camera_io.input_values.pin_5 =
+  camera_io_msg.input_values.pin_5 =
     frame_data.getLocalIOData().universalIOInputValue.logicalValueUniIOPin5;
-  camera_io.input_values.pin_6 =
+  camera_io_msg.input_values.pin_6 =
     frame_data.getLocalIOData().universalIOInputValue.logicalValueUniIOPin6;
-  camera_io.input_values.pin_7 =
+  camera_io_msg.input_values.pin_7 =
     frame_data.getLocalIOData().universalIOInputValue.logicalValueUniIOPin7;
-  camera_io.input_values.pin_8 =
+  camera_io_msg.input_values.pin_8 =
     frame_data.getLocalIOData().universalIOInputValue.logicalValueUniIOPin8;
-  camera_io.output_values.pin_5 =
+  camera_io_msg.output_values.pin_5 =
     frame_data.getLocalIOData().universalIOOutputValue.localOutput1Pin5;
-  camera_io.output_values.pin_6 =
+  camera_io_msg.output_values.pin_6 =
     frame_data.getLocalIOData().universalIOOutputValue.localOutput2Pin6;
-  camera_io.output_values.pin_7 =
+  camera_io_msg.output_values.pin_7 =
     frame_data.getLocalIOData().universalIOOutputValue.localOutput3Pin7;
-  camera_io.output_values.pin_8 =
+  camera_io_msg.output_values.pin_8 =
     frame_data.getLocalIOData().universalIOOutputValue.localOutput4Pin8;
-  camera_io.ossds_state.ossd1a = frame_data.getLocalIOData().ossdsState.stateOSSD1A;
-  camera_io.ossds_state.ossd1b = frame_data.getLocalIOData().ossdsState.stateOSSD1B;
-  camera_io.ossds_state.ossd2a = frame_data.getLocalIOData().ossdsState.stateOSSD2A;
-  camera_io.ossds_state.ossd2b = frame_data.getLocalIOData().ossdsState.stateOSSD2B;
-  camera_io.ossds_dyn_count = frame_data.getLocalIOData().ossdsDynCount;
-  camera_io.ossds_crc = frame_data.getLocalIOData().ossdsCRC;
-  camera_io.ossds_io_status = frame_data.getLocalIOData().ossdsIOStatus;
-  camera_io.dynamic_speed_a = frame_data.getLocalIOData().dynamicSpeedA;
-  camera_io.dynamic_speed_b = frame_data.getLocalIOData().dynamicSpeedB;
-  camera_io.dynamic_valid_flags = frame_data.getLocalIOData().DynamicValidFlags;
-  io_pub_->publish(camera_io);
+  camera_io_msg.ossds_state.ossd1a = frame_data.getLocalIOData().ossdsState.stateOSSD1A;
+  camera_io_msg.ossds_state.ossd1b = frame_data.getLocalIOData().ossdsState.stateOSSD1B;
+  camera_io_msg.ossds_state.ossd2a = frame_data.getLocalIOData().ossdsState.stateOSSD2A;
+  camera_io_msg.ossds_state.ossd2b = frame_data.getLocalIOData().ossdsState.stateOSSD2B;
+  camera_io_msg.ossds_dyn_count = frame_data.getLocalIOData().ossdsDynCount;
+  camera_io_msg.ossds_crc = frame_data.getLocalIOData().ossdsCRC;
+  camera_io_msg.ossds_io_status = frame_data.getLocalIOData().ossdsIOStatus;
+  camera_io_msg.dynamic_speed_a = frame_data.getLocalIOData().dynamicSpeedA;
+  camera_io_msg.dynamic_speed_b = frame_data.getLocalIOData().dynamicSpeedB;
+  camera_io_msg.dynamic_valid_flags = frame_data.getLocalIOData().DynamicValidFlags;
+  io_pub_->publish(camera_io_msg);
 }
 
 void CompoundPublisher::publishROI(
