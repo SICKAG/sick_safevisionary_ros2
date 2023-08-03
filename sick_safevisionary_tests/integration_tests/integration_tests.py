@@ -91,16 +91,16 @@ class IntegrationTest(unittest.TestCase):
         whether they disappear after `cleanup`.
         """
         topics = [
-            "sick_safevisionary/camera_info",
-            "sick_safevisionary/points",
-            "sick_safevisionary/imu_data",
-            "sick_safevisionary/device_status",
-            "sick_safevisionary/camera_io",
-            "sick_safevisionary/region_of_interest",
-            "sick_safevisionary/fields",
-            "sick_safevisionary/depth",
-            "sick_safevisionary/intensity",
-            "sick_safevisionary/state",
+            "/sick_safevisionary/camera_info",
+            "/sick_safevisionary/points",
+            "/sick_safevisionary/imu_data",
+            "/sick_safevisionary/device_status",
+            "/sick_safevisionary/camera_io",
+            "/sick_safevisionary/region_of_interest",
+            "/sick_safevisionary/fields",
+            "/sick_safevisionary/depth",
+            "/sick_safevisionary/intensity",
+            "/sick_safevisionary/state",
         ]
 
         def list_topics():
