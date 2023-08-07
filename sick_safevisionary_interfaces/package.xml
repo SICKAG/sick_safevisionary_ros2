@@ -2,10 +2,11 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>sick_safevisionary_interfaces</name>
-  <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="grosse@fzi.de">ubuntu</maintainer>
-  <license>TODO: License declaration</license>
+  <version>1.0.0</version>
+  <description>Provides interface descriptions to communicate with a SICK Safevisionary Sensor over ROS 2</description>
+  <maintainer email="grosse@fzi.de">Marvin Grosse Besselmann</maintainer>
+  <maintainer email="scherzin@fzi.de">Stefan Scherzinger</maintainer>
+  <license>Apache-2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
