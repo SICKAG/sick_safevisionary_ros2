@@ -74,7 +74,7 @@ public:
      * @brief Publish once with all registered publishers
      *
      * @param header Header for this data
-     * @param data The sensor's data to publish
+     * @param frame_data The sensor's data to publish
      */
   void publish(const std_msgs::msg::Header & header, visionary::SafeVisionaryData & frame_data);
 
@@ -98,40 +98,118 @@ public:
   void reset();
 
 private:
+  /*!
+   * \brief Publishes the camera information of the sensor
+   *
+   * \param header Header for this data
+   * \param frame_data The sensor's data to publish
+   */
   void publishCameraInfo(
     const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data);
 
+  /*!
+   * \brief Publishes the generated 3D Pointcloud
+   *
+   * \param header Header for this data
+   * \param frame_data The sensor's data to publish
+   */
   void publishPointCloud(
     const std_msgs::msg::Header & header, visionary::SafeVisionaryData & frame_data);
 
+  /*!
+   * \brief Publishes the values of the IMU
+   *
+   * \param header Header for this data
+   * \param frame_data The sensor's data to publish
+   */
   void publishIMUData(
     const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data);
 
+  /*!
+   * \brief Publishes the device status
+   *
+   * \param header Header for this data
+   * \param frame_data The sensor's data to publish
+   */
   void publishDeviceStatus(
     const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data);
 
+  /*!
+   * \brief Publishes the state of the IO ports
+   *
+   * \param header Header for this data
+   * \param frame_data The sensor's data to publish
+   */
   void publishIOs(
     const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data);
 
+  /*!
+   * \brief Publishes the regions of interest
+   *
+   * \param header Header for this data
+   * \param frame_data The sensor's data to publish
+   */
   void publishROI(
     const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data);
 
+  /*!
+   * \brief Publishes the evaluation of the configured safety fields
+   *
+   * \param header Header for this data
+   * \param frame_data The sensor's data to publish
+   */
   void publishFieldInformation(
     const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data);
 
+  /*!
+   * \brief Publishes the raw depth image
+   *
+   * \param header Header for this data
+   * \param frame_data The sensor's data to publish
+   */
   void publishDepthImage(
     const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data);
 
+  /*!
+   * \brief Publishes the raw intensity image
+   *
+   * \param header Header for this data
+   * \param frame_data The sensor's data to publish
+   */
   void publishIntensityImage(
     const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data);
 
+  /*!
+   * \brief Publishes the raw state map of each pixel
+   *
+   * \param header Header for this data
+   * \param frame_data The sensor's data to publish
+   */
   void publishStateMap(
     const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data);
 
+  /*!
+   * \brief Creates an image from a data vector
+   *
+   * \param header Header for this data
+   * \param frame_data The sensor's data to publish
+   * \param vec The converted data vector
+   *
+   * \returns Image projection of input data vector
+   */
   sensor_msgs::msg::Image::SharedPtr Vec16ToImage(
     const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data,
     std::vector<uint16_t> vec);
 
+  /*!
+   * \brief Creates an image from a data vector
+   *
+   * \param header Header for this data
+   * \param frame_data The sensor's data to publish
+   * \param vec The converted data vector
+   *
+   * \returns Image projection of input data vector
+   */
   sensor_msgs::msg::Image::SharedPtr Vec8ToImage(
     const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data,
     std::vector<uint8_t> vec);
