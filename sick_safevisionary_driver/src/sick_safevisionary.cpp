@@ -50,9 +50,18 @@ SickSafeVisionary::CallbackReturn SickSafeVisionary::on_configure(
   data_handle_ = std::make_shared<visionary::SafeVisionaryData>();
   data_stream_ = std::make_shared<visionary::SafeVisionaryDataStream>(data_handle_);
   if (!data_stream_->openUdpConnection(htons(port))) {
-    RCLCPP_ERROR(this->get_logger(), "Could not open UDP connection on port: %i", port);
-    return CallbackReturn::ERROR;
+    RCLCPP_WARN(this->get_logger(), "Could not open UDP connection on port: %i", port);
+    return CallbackReturn::FAILURE;
   }
+
+  // Check the connection
+  if (!data_stream_->getNextBlobUdp()) {
+    RCLCPP_WARN(
+      this->get_logger(), "No sensor data on port %i. Please check your network connection.", port);
+    data_stream_->closeUdpConnection();
+    return CallbackReturn::FAILURE;
+  }
+
   continue_ = true;
   data_publisher_ = std::make_unique<CompoundPublisher>(this);
 
