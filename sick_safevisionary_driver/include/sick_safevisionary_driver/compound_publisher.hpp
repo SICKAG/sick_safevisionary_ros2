@@ -70,31 +70,31 @@ public:
   CompoundPublisher(CompoundPublisher &&) = delete;
   CompoundPublisher & operator=(const CompoundPublisher &) = delete;
 
-  /**
-     * @brief Publish once with all registered publishers
-     *
-     * @param header Header for this data
-     * @param frame_data The sensor's data to publish
-     */
+  /*!
+   * @brief Publish once with all registered publishers
+   *
+   * @param header Header for this data
+   * @param frame_data The sensor's data to publish
+   */
   void publish(const std_msgs::msg::Header & header, visionary::SafeVisionaryData & frame_data);
 
-  /**
-     * @brief Call this function in the lifecycle node's `on_activate`.
-     */
+  /*!
+   * @brief Call this function in the lifecycle node's `on_activate`.
+   */
   void activate();
 
-  /**
-     * @brief Call this function in the lifecycle node's `on_deactivate`.
-     */
+  /*!
+   * @brief Call this function in the lifecycle node's `on_deactivate`.
+   */
   void deactivate();
 
-  /**
-     * @brief Reset all publishers
-     *
-     * This destroys all registered publishers such that their topics are no longer advertised.
-     * Call this function in the lifecycle node's `on_cleanup` and `on_shutdown`.
-     * It's save to call this function multiple times.
-     */
+  /*!
+   * @brief Reset all publishers
+   *
+   * This destroys all registered publishers such that their topics are no longer advertised.
+   * Call this function in the lifecycle node's `on_cleanup` and `on_shutdown`.
+   * It's save to call this function multiple times.
+   */
   void reset();
 
 private:
