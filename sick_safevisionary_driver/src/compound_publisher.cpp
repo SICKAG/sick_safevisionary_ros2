@@ -152,7 +152,8 @@ void CompoundPublisher::publishCameraInfo(
 void CompoundPublisher::publishPointCloud(
   const std_msgs::msg::Header & header, visionary::SafeVisionaryData & frame_data)
 {
-  sensor_msgs::msg::PointCloud2::SharedPtr cloud_msg(new sensor_msgs::msg::PointCloud2);
+  sensor_msgs::msg::PointCloud2::SharedPtr cloud_msg =
+    std::make_shared<sensor_msgs::msg::PointCloud2>();
   cloud_msg->header = header;
   cloud_msg->height = frame_data.getHeight();
   cloud_msg->width = frame_data.getWidth();
