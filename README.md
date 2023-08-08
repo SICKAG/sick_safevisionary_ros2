@@ -1,5 +1,5 @@
 # Sick Safevisionary ROS2
-This is the official ROS2 driver for the Sick *safeVisionary2* cameras.
+This is the official ROS2 driver for the [Sick safeVisionary2](https://www.sick.com/de/en/safety-camera-sensors/safety-camera-sensors/safevisionary2/c/g568562) cameras.
 
 ## System dependencies
 We use *Boost*'s [lock-free](https://www.boost.org/doc/libs/1_82_0/doc/html/lockfree.html) data structures in this driver.
