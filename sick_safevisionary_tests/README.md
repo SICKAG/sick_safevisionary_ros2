@@ -1,5 +1,5 @@
 # Sick Safevisionary Tests
-Integration tests and high-level concept validation for the Sick SafeVisionary2 driver.
+Integration tests and high-level concept validation for the Sick *safeVisionary2* driver.
 
 Useful information on integration tests in ROS2 is available [here][1]
 
