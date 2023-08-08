@@ -54,8 +54,10 @@ SickSafeVisionary::CallbackReturn SickSafeVisionary::on_configure(
     return CallbackReturn::FAILURE;
   }
 
-  // Check the connection
-  if (!data_stream_->getNextBlobUdp()) {
+  // Check the connection when working with real hardware
+  bool real_hw = (this->has_parameter("real_hw")) ? this->get_parameter("real_hw").as_bool()
+                                                  : this->declare_parameter("real_hw", true);
+  if (real_hw && !data_stream_->getNextBlobUdp()) {
     RCLCPP_WARN(
       this->get_logger(), "No sensor data on port %i. Please check your network connection.", port);
     data_stream_->closeUdpConnection();

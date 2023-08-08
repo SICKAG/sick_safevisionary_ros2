@@ -22,7 +22,8 @@ def generate_test_description():
                 "launch",
                 "driver_node.launch.py",
             ]
-        )
+        ),
+        launch_arguments={"real_hw": "False"}.items(),
     )
     until_ready = 3.0  # sec
     return LaunchDescription(
