@@ -11,7 +11,7 @@ import rclpy
 from rclpy.node import Node
 from lifecycle_msgs.srv import ChangeState, GetState
 from lifecycle_msgs.msg import Transition, State
-import subprocess
+import time
 
 
 def generate_test_description():
@@ -105,13 +105,13 @@ class IntegrationTest(unittest.TestCase):
         ]
 
         def list_topics():
-            advertised = subprocess.check_output(
-                "ros2 topic list", stderr=subprocess.STDOUT, shell=True
-            )
-            return advertised.decode("utf-8").split("\n")
+            topics = self.node.get_topic_names_and_types()
+            advertised = [t[0] for t in topics]
+            return advertised
 
         # After configuration
         self.change_state(Transition.TRANSITION_CONFIGURE)
+        time.sleep(1)  # wait some time to take effect
         topic_list = list_topics()
         for topic in topics:
             self.assertTrue(
@@ -121,6 +121,7 @@ class IntegrationTest(unittest.TestCase):
 
         # After cleanup
         self.change_state(Transition.TRANSITION_CLEANUP)
+        time.sleep(1)
         topic_list = list_topics()
         for topic in topics:
             self.assertTrue(
