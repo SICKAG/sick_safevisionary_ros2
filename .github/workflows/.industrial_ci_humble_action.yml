@@ -15,7 +15,7 @@ jobs:
         env:
           - {ROS_DISTRO: humble, ROS_REPO: testing}
           - {ROS_DISTRO: humble, ROS_REPO: main}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v1
       - uses: 'ros-industrial/industrial_ci@master'
