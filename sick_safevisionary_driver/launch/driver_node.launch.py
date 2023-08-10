@@ -10,8 +10,12 @@
 # -----------------------------------------------------------------------------
 
 from launch import LaunchDescription
-from launch_ros.actions import Node
-from launch.actions import DeclareLaunchArgument
+from launch.actions import DeclareLaunchArgument, EmitEvent, RegisterEventHandler
+from launch.events import matches_action
+from launch_ros.actions import LifecycleNode
+from launch_ros.events.lifecycle import ChangeState
+from launch_ros.event_handlers import OnStateTransition
+from lifecycle_msgs.msg import Transition
 from launch.substitutions import LaunchConfiguration
 
 
@@ -35,9 +39,11 @@ def generate_launch_description():
     args = [port, frame_id, real_hw]
 
     # The Sick safeVisionary2 driver
-    driver_node = Node(
+    driver_node = LifecycleNode(
         package="sick_safevisionary_driver",
         executable="driver_node",
+        name="sick_safevisionary",
+        namespace="",
         # prefix="screen -d -m gdb -command=/home/scherzin/.ros/my_debug_log \
         # --ex run --args",
         output="both",
@@ -48,4 +54,31 @@ def generate_launch_description():
         ],
     )
 
-    return LaunchDescription(args + [driver_node])
+    configure_trans_event = EmitEvent(
+        event=ChangeState(
+            lifecycle_node_matcher=matches_action(driver_node),
+            transition_id=Transition.TRANSITION_CONFIGURE,
+        )
+    )
+
+    node_activation_handle = RegisterEventHandler(
+        OnStateTransition(
+            target_lifecycle_node=driver_node,
+            start_state="configuring",
+            goal_state="inactive",
+            handle_once=True,
+            entities=[
+                EmitEvent(
+                    event=ChangeState(
+                        lifecycle_node_matcher=matches_action(driver_node),
+                        transition_id=Transition.TRANSITION_ACTIVATE,
+                    )
+                )
+            ],
+        )
+    )
+
+    ld = LaunchDescription(args + [driver_node])
+    ld.add_action(configure_trans_event)
+    ld.add_action(node_activation_handle)
+    return ld
