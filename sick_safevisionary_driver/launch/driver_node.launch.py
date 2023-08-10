@@ -54,6 +54,7 @@ def generate_launch_description():
         ],
     )
 
+    # Configure the driver once it's launched
     configure_trans_event = EmitEvent(
         event=ChangeState(
             lifecycle_node_matcher=matches_action(driver_node),
@@ -61,6 +62,7 @@ def generate_launch_description():
         )
     )
 
+    # Activate the driver once it's configured correctly
     node_activation_handle = RegisterEventHandler(
         OnStateTransition(
             target_lifecycle_node=driver_node,
