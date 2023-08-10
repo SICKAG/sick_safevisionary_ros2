@@ -14,7 +14,7 @@ This driver's behavior is roughly as follows:
 
 | State    | Behavior |
 | -------- | ------- |
-| Unconfigured  | This is the state right after the driver starts or after `cleanup` has been called. No topics are advertised and previously advertised topics are removed.|
+| Unconfigured  | No topics are advertised and previously advertised topics are removed.|
 | Inactive | The driver establishes a UDP data connection to the camera and processes sensor data without publishing. |
 | Active    | The driver continuously publishes all camera data with a consistent time stamp across all topics. |
 | Finalized    | The driver has been shutdown and all resources have been cleaned up. All previously advertised topics are removed. |

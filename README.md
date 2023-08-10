@@ -27,14 +27,16 @@ In a sourced terminal, start the driver with
 ros2 launch sick_safevisionary_driver driver_node.launch.py
 ```
 
-This driver implements a *lifecycle node* and needs two additional steps to actually publish data.
+You can list the relevant topics with
+```bash
+ros2 topic list | grep sick_safevisionary
+```
+
+This driver implements a *lifecycle node* which automatically transitions into the active state on bootup.
+The state can also be manually changed for example from an unconfigured state to an active, publishing state using two additional steps on the command line.
 Open another sourced terminal and call
 ```bash
 ros2 lifecycle set /sick_safevisionary configure
 ros2 lifecycle set /sick_safevisionary activate
-```
-You can list the relevant topics with
-```bash
-ros2 topic list | grep sick_safevisionary
 ```
 Here's [more information](./sick_safevisionary_driver/README.md) about driver's lifecycle behavior.
