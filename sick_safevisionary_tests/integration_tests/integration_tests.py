@@ -76,6 +76,8 @@ class IntegrationTest(unittest.TestCase):
 
         We repetitively call `configure` and `cleanup` and check if that works.
         """
+        self.change_state(Transition.TRANSITION_DEACTIVATE)
+        self.change_state(Transition.TRANSITION_CLEANUP)
         for _ in range(3):
             self.change_state(Transition.TRANSITION_CONFIGURE)
             self.change_state(Transition.TRANSITION_CLEANUP)
