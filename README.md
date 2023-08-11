@@ -1,9 +1,24 @@
-[![License](https://img.shields.io/badge/License-Apache_2.0-yellow.svg)](https://opensource.org/licenses/Apache-2.0)
-![build badge](https://github.com/SICKAG/sick_safevisionary_ros2/actions/workflows/industrial_ci_humble_action.yml/badge.svg)
-![build badge](https://github.com/SICKAG/sick_safevisionary_ros2/actions/workflows/industrial_ci_iron_action.yml/badge.svg)
-![build badge](https://github.com/SICKAG/sick_safevisionary_ros2/actions/workflows/industrial_ci_rolling_action.yml/badge.svg)
+<div align="center">
+  <img src="resources/images/safevisionary2.png" alt="Sick safeVisionary2" style="width: 30%;"/>
+  <h1 align="center">Sick Safevisionary ROS2</h1>
+</div>
 
-# Sick Safevisionary ROS2
+<p align="center">
+  <a href="https://opensource.org/licenses/Apache-2.0">
+    <img src="https://img.shields.io/badge/License-Apache_2.0-yellow.svg" alt="License">
+  </a>
+  <a href="https://github.com/SICKAG/sick_safevisionary_ros2/actions">
+    <img src="https://github.com/SICKAG/sick_safevisionary_ros2/actions/workflows/industrial_ci_humble_action.yml/badge.svg" alt="build badge">
+  </a>
+  <a href="https://github.com/SICKAG/sick_safevisionary_ros2/actions">
+    <img src="https://github.com/SICKAG/sick_safevisionary_ros2/actions/workflows/industrial_ci_iron_action.yml/badge.svg" alt="build badge">
+  </a>
+  <a href="https://github.com/SICKAG/sick_safevisionary_ros2/actions">
+    <img src="https://github.com/SICKAG/sick_safevisionary_ros2/actions/workflows/industrial_ci_rolling_action.yml/badge.svg" alt="build badge">
+  </a>
+</p>
+
+
 This is the official ROS2 driver for the [Sick safeVisionary2](https://www.sick.com/de/en/safety-camera-sensors/safety-camera-sensors/safevisionary2/c/g568562) cameras.
 
 ## System dependencies
