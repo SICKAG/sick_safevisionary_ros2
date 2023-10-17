@@ -39,6 +39,7 @@ colcon build --packages-select sick_safevisionary_base sick_safevisionary_interf
 ```
 
 ## Getting started
+Each camera must be configured once. The setup is explained [here](https://github.com/SICKAG/sick_safevisionary_base/blob/main/resources/doc/safety_designer.md).
 In a sourced terminal, start the driver with
 ```bash
 ros2 launch sick_safevisionary_driver driver_node.launch.py
