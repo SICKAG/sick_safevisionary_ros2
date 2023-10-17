@@ -6,6 +6,7 @@
   <description>Provides interface descriptions to communicate with a SICK Safevisionary Sensor over ROS 2</description>
   <maintainer email="grosse@fzi.de">Marvin Grosse Besselmann</maintainer>
   <maintainer email="scherzin@fzi.de">Stefan Scherzinger</maintainer>
+  <maintainer email="jochen.lienhart@sick.de">Jochen Lienhart</maintainer>
   <license>Apache-2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
