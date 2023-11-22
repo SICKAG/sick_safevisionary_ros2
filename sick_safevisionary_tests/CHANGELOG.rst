@@ -2,8 +2,8 @@
 Changelog for package sick_safevisionary_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.1 (2023-11-22)
+------------------
 * Update maintainer tags
 * Transition from configuring to active by itself once on launch (`#2 <https://github.com/SICKAG/sick_safevisionary_ros2/issues/2>`_)
   * Transition from configuring to active by itself once on launch
