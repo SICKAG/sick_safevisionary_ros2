@@ -2,6 +2,11 @@
 Changelog for package sick_safevisionary_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add rosdep key for `boost`
+* Contributors: Stefan Scherzinger
+
 1.0.1 (2023-11-22)
 ------------------
 * Update maintainer tags
