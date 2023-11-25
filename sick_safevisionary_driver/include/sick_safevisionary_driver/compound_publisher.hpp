@@ -33,7 +33,12 @@
 
 #include <memory>
 
+#include "rclcpp/version.h"
+#if RCLCPP_VERSION_MAJOR >= 21
+#include "cv_bridge/cv_bridge.hpp"
+#else
 #include "cv_bridge/cv_bridge.h"
+#endif
 #include "opencv2/opencv.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "rclcpp_lifecycle/lifecycle_publisher.hpp"
