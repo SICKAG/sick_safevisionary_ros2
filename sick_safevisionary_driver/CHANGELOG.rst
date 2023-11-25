@@ -2,8 +2,8 @@
 Changelog for package sick_safevisionary_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.3 (2023-11-25)
+------------------
 * Use ROS version-dependent cv_bridge include
 * Contributors: Stefan Scherzinger
 
