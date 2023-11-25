@@ -2,6 +2,9 @@
 Changelog for package sick_safevisionary_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.0.2 (2023-11-23)
 ------------------
 
