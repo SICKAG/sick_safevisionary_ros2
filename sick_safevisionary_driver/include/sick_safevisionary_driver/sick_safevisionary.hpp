@@ -45,7 +45,7 @@
 namespace sick
 {
 /**
- * @brief The primary driver class for the Sick SafeVisionary camera
+ * @brief The primary driver class for the SICK safeVisionary camera
  *
  * This class implements a *lifecycle node* to provide advanced options for managing the driver's internal state.
  * An overview of these states is given [here](https://design.ros2.org/articles/node_lifecycle.html)

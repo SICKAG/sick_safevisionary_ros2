@@ -1,13 +1,13 @@
-# Sick Safevisionary Driver
+# SICK safeVisionary Driver
 
-This is the official ROS2 driver for the Sick *safeVisionary2* cameras.
+This is the official ROS 2 driver for the SICK *safeVisionary2* cameras.
 See the [top-level readme](./../README.md) for getting started.
 
 
 ## Lifecycle states
-This driver implements a thin ROS2 wrapper around the [sick_safevisionary_base](https://github.com/SICKAG/sick_safevisionary_base) library in form of a *lifecycle node*.
-In contrast to conventional ROS2 nodes, lifecycle nodes give us more control about the
-driver's individual states. This is handy e.g. when performing a clean reset at runtime.
+This driver implements a thin ROS 2 wrapper around the [sick_safevisionary_base](https://github.com/SICKAG/sick_safevisionary_base) library in form of a *lifecycle node*.
+In contrast to conventional ROS 2 nodes, lifecycle nodes give us more control about the
+driver's individual states. This is handy e.g., when performing a clean reset at runtime.
 You'll find more information on the individual states and state transitions [in this design article](https://design.ros2.org/articles/node_lifecycle.html).
 
 This driver's behavior is roughly as follows:
@@ -20,7 +20,7 @@ This driver's behavior is roughly as follows:
 | Finalized    | The driver has been shutdown and all resources have been cleaned up. All previously advertised topics are removed. |
 
 ## Managing the lifecycle
-ROS2 has a command line interface to trigger state transitions.
+ROS 2 has a command line interface to trigger state transitions.
 Here are the commands to get the */sick_safevisionary* node through its primary states:
 
 ```bash
