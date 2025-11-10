@@ -1,6 +1,6 @@
 <div align="center">
-  <img src="resources/images/safevisionary2.png" alt="Sick safeVisionary2" style="width: 30%;"/>
-  <h1 align="center">Sick Safevisionary ROS2</h1>
+  <img src="resources/images/safevisionary2.png" alt="SICK safeVisionary2" style="width: 30%;"/>
+  <h1 align="center">SICK safeVisionary ROS 2</h1>
 </div>
 
 <p align="center">
@@ -19,7 +19,7 @@
 </p>
 
 
-This is the official ROS2 driver for the [Sick safeVisionary2](https://www.sick.com/de/en/safety-camera-sensors/safety-camera-sensors/safevisionary2/c/g568562) cameras.
+This is the official ROS 2 driver for the [SICK safeVisionary2](https://www.sick.com/de/en/safety-camera-sensors/safety-camera-sensors/safevisionary2/c/g568562) cameras.
 
 ## System dependencies
 We use *Boost*'s [lock-free](https://www.boost.org/doc/libs/1_82_0/doc/html/lockfree.html) data structures in this driver.
@@ -29,7 +29,7 @@ sudo apt-get install libboost-dev
 ```
 
 ## Build and install
-Switch to the `src` folder of your current ROS2 workspace and
+Switch to the `src` folder of your current ROS 2 workspace and
 ```bash
 git clone https://github.com/SICKAG/sick_safevisionary_ros2.git
 git clone https://github.com/SICKAG/sick_safevisionary_base.git
