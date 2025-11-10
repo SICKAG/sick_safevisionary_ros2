@@ -25,7 +25,7 @@ This is the official ROS2 driver for the [Sick safeVisionary2](https://www.sick.
 We use *Boost*'s [lock-free](https://www.boost.org/doc/libs/1_82_0/doc/html/lockfree.html) data structures in this driver.
 You can install them with
 ```bash
-sudo apt-get install libboost-all-dev
+sudo apt-get install libboost-dev
 ```
 
 ## Build and install
