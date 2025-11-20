@@ -2,6 +2,11 @@
 Changelog for package sick_safevisionary_interfaces
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.0.4 (2025-11-20)
+------------------
+* Updated maintainer information
+* Contributors: Christian Eichmann
+
 1.0.3 (2023-11-25)
 ------------------
 
