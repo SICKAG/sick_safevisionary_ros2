@@ -1,12 +1,6 @@
-name: Rolling
+name: Kilted
 
-on:
-  push:
-  pull_request:
-  schedule:
-    # Run every Friday at 6:30 am to detect breaking APIs
-    - cron: '30 6 * * 5'
-
+on: [push, pull_request]
 
 
 jobs:
@@ -19,8 +13,8 @@ jobs:
       fail-fast: false
       matrix:
         env:
-          - {ROS_DISTRO: rolling, ROS_REPO: testing}
-          - {ROS_DISTRO: rolling, ROS_REPO: main}
+          - {ROS_DISTRO: kilted, ROS_REPO: testing}
+          - {ROS_DISTRO: kilted, ROS_REPO: main}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v1
