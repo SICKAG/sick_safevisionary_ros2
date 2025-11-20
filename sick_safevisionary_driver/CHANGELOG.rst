@@ -2,6 +2,13 @@
 Changelog for package sick_safevisionary_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.0.4 (2025-11-20)
+--------------
+* Removed unneeded boost dependencies
+* Updated documentation and package meta data
+* Updated pre-commit config
+* Contributors: Christian Eichmann, Mikael Arguedas
+
 1.0.3 (2023-11-25)
 ------------------
 * Use ROS version-dependent cv_bridge include
