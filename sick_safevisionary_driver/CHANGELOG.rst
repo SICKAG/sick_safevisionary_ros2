@@ -2,6 +2,11 @@
 Changelog for package sick_safevisionary_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Replace ament_target_libraries with target_link_libraries
+* Contributors: Alejandro Hernandez Cordero, Christian Eichmann
+
 1.0.4 (2025-11-20)
 --------------
 * Removed unneeded boost dependencies
