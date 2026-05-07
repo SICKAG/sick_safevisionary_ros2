@@ -2,8 +2,8 @@
 Changelog for package sick_safevisionary_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.5 (2026-05-07)
+------------------
 * Replace ament_target_libraries with target_link_libraries
 * Contributors: Alejandro Hernandez Cordero, Christian Eichmann
 
