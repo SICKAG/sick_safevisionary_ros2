@@ -2,6 +2,9 @@
 Changelog for package sick_safevisionary_interfaces
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.0.4 (2025-11-20)
 ------------------
 * Updated maintainer information
