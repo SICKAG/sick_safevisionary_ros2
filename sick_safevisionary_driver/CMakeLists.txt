@@ -34,13 +34,13 @@ target_include_directories(driver_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-ament_target_dependencies(driver_node
-  cv_bridge
-  lifecycle_msgs
-  rclcpp
-  rclcpp_lifecycle
-  sensor_msgs
-  sick_safevisionary_interfaces
+target_link_libraries(driver_node
+  cv_bridge::cv_bridge
+  ${lifecycle_msgs_TARGETS}
+  rclcpp::rclcpp
+  rclcpp_lifecycle::rclcpp_lifecycle
+  ${sensor_msgs_TARGETS}
+  ${sick_safevisionary_interfaces_TARGETS}
 )
 
 target_link_libraries(driver_node
