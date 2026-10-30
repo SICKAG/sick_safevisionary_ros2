@@ -41,6 +41,59 @@
 
 namespace sick
 {
+namespace
+{
+const char * dataStreamErrorToString(visionary::DataStreamError error)
+{
+  switch (error)
+  {
+    case visionary::DataStreamError::OK:
+      return "no stream error reported";
+    case visionary::DataStreamError::DATA_RECEIVE_TIMEOUT:
+      return "no sensor data received";
+    case visionary::DataStreamError::CONNECTION_CLOSED:
+      return "sensor connection closed";
+    case visionary::DataStreamError::PARSE_XML_ERROR:
+      return "XML metadata parse error";
+    case visionary::DataStreamError::INVALID_VERSION_UDP_HEADER:
+      return "invalid UDP header version";
+    case visionary::DataStreamError::INVALID_PACKET_TYPE_UDP_HEADER:
+      return "invalid UDP packet type";
+    case visionary::DataStreamError::INVALID_LENGTH_UDP_HEADER:
+      return "invalid UDP header length";
+    case visionary::DataStreamError::INVALID_CRC_UDP_HEADER:
+      return "invalid UDP header checksum";
+    case visionary::DataStreamError::INVALID_BLOB_HEADER:
+      return "invalid Blob header";
+    case visionary::DataStreamError::INVALID_VERSION_BLOB_HEADER:
+      return "invalid Blob header version";
+    case visionary::DataStreamError::INVALID_PACKET_TYPE_BLOB_HEADER:
+      return "invalid Blob packet type";
+    case visionary::DataStreamError::INVALID_BLOB_ID:
+      return "invalid Blob ID";
+    case visionary::DataStreamError::INVALID_BLOB_NUMBER:
+      return "invalid Blob number";
+    case visionary::DataStreamError::INVALID_UDP_FRAGMENT_NUMBER:
+      return "invalid UDP fragment number";
+    case visionary::DataStreamError::DATA_SEGMENT_DEPTHMAP_ERROR:
+      return "depth map segment parse error";
+    case visionary::DataStreamError::DATA_SEGMENT_DEVICESTATUS_ERROR:
+      return "Device Status segment parse error";
+    case visionary::DataStreamError::DATA_SEGMENT_ROI_ERROR:
+      return "ROI segment parse error";
+    case visionary::DataStreamError::DATA_SEGMENT_LOCALIOS_ERROR:
+      return "Local I/Os segment parse error";
+    case visionary::DataStreamError::DATA_SEGMENT_FIELDINFORMATION_ERROR:
+      return "Field Information segment parse error";
+    case visionary::DataStreamError::DATA_SEGMENT_LOGICSIGNALS_ERROR:
+      return "Logic Signals segment parse error";
+    case visionary::DataStreamError::DATA_SEGMENT_IMU_ERROR:
+      return "IMU segment parse error";
+  }
+  return "unknown data stream error";
+}
+}  // namespace
+
 SickSafeVisionary::CallbackReturn SickSafeVisionary::on_configure(
   [[maybe_unused]] const rclcpp_lifecycle::State & previous_state)
 {
@@ -59,7 +112,8 @@ SickSafeVisionary::CallbackReturn SickSafeVisionary::on_configure(
                                                   : this->declare_parameter("real_hw", true);
   if (real_hw && !data_stream_->getNextBlobUdp()) {
     RCLCPP_WARN(
-      this->get_logger(), "No sensor data on port %i. Please check your network connection.", port);
+      this->get_logger(), "Sensor startup failed: %s on port %i.",
+      dataStreamErrorToString(data_stream_->getLastError()), port);
     data_stream_->closeUdpConnection();
     return CallbackReturn::FAILURE;
   }
