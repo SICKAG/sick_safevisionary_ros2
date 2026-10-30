@@ -16,15 +16,27 @@ from launch_ros.actions import LifecycleNode
 from launch_ros.events.lifecycle import ChangeState
 from launch_ros.event_handlers import OnStateTransition
 from lifecycle_msgs.msg import Transition
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PythonExpression
 
 
 def generate_launch_description():
     # Launch arguments
+    tcp = DeclareLaunchArgument(
+        "tcp",
+        default_value="False",
+        description="Use the camera's TCP measurement stream instead of UDP.",
+    )
     port = DeclareLaunchArgument(
         "port",
-        default_value="6060",
-        description="Receiving UDP port on the driver's PC.",
+        default_value=PythonExpression(
+            ["'2114' if '", LaunchConfiguration("tcp"), "'.lower() == 'true' else '6060'"]
+        ),
+        description="UDP receive port or TCP stream port, selected by `tcp`.",
+    )
+    device_ip = DeclareLaunchArgument(
+        "device_ip",
+        default_value="",
+        description="Camera IP address used by the TCP stream.",
     )
     frame_id = DeclareLaunchArgument(
         "frame_id",
@@ -36,7 +48,7 @@ def generate_launch_description():
         default_value="True",
         description="Whether this driver reads data from real hardware.",
     )
-    args = [port, frame_id, real_hw]
+    args = [tcp, port, device_ip, frame_id, real_hw]
 
     # The SICK safeVisionary2 Driver
     driver_node = LifecycleNode(
@@ -49,6 +61,8 @@ def generate_launch_description():
         output="both",
         parameters=[
             {"port": LaunchConfiguration("port")},
+            {"tcp": LaunchConfiguration("tcp")},
+            {"device_ip": LaunchConfiguration("device_ip")},
             {"frame_id": LaunchConfiguration("frame_id")},
             {"real_hw": LaunchConfiguration("real_hw")},
         ],

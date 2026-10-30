@@ -7,3 +7,8 @@ uint32 cop_non_safety_related
 uint32 cop_reset_required
 ActiveMonitoringCase active_monitoring_case
 uint8 contamination_level
+# v2-only fields; defaults are invalid when configuration_checksum_present is false.
+bool configuration_checksum_present
+uint32 configuration_checksum
+bool dead_clusters_in_depth_map_zone_error
+bool dead_zone_warning

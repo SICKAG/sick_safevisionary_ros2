@@ -32,6 +32,7 @@
 
 #include <chrono>
 #include <memory>
+#include <string>
 #include <thread>
 
 #include "lifecycle_msgs/msg/state.hpp"
@@ -41,26 +42,113 @@
 
 namespace sick
 {
+namespace
+{
+const char * dataStreamErrorToString(visionary::DataStreamError error)
+{
+  switch (error)
+  {
+    case visionary::DataStreamError::OK:
+      return "no stream error reported";
+    case visionary::DataStreamError::DATA_RECEIVE_TIMEOUT:
+      return "no sensor data received";
+    case visionary::DataStreamError::CONNECTION_CLOSED:
+      return "sensor connection closed";
+    case visionary::DataStreamError::PARSE_XML_ERROR:
+      return "XML metadata parse error";
+    case visionary::DataStreamError::INVALID_VERSION_UDP_HEADER:
+      return "invalid UDP header version";
+    case visionary::DataStreamError::INVALID_PACKET_TYPE_UDP_HEADER:
+      return "invalid UDP packet type";
+    case visionary::DataStreamError::INVALID_LENGTH_UDP_HEADER:
+      return "invalid UDP header length";
+    case visionary::DataStreamError::INVALID_CRC_UDP_HEADER:
+      return "invalid UDP header checksum";
+    case visionary::DataStreamError::INVALID_BLOB_HEADER:
+      return "invalid Blob header";
+    case visionary::DataStreamError::INVALID_VERSION_BLOB_HEADER:
+      return "invalid Blob header version";
+    case visionary::DataStreamError::INVALID_PACKET_TYPE_BLOB_HEADER:
+      return "invalid Blob packet type";
+    case visionary::DataStreamError::INVALID_BLOB_ID:
+      return "invalid Blob ID";
+    case visionary::DataStreamError::INVALID_BLOB_NUMBER:
+      return "invalid Blob number";
+    case visionary::DataStreamError::INVALID_UDP_FRAGMENT_NUMBER:
+      return "invalid UDP fragment number";
+    case visionary::DataStreamError::DATA_SEGMENT_DEPTHMAP_ERROR:
+      return "depth map segment parse error";
+    case visionary::DataStreamError::DATA_SEGMENT_DEVICESTATUS_ERROR:
+      return "Device Status segment parse error";
+    case visionary::DataStreamError::DATA_SEGMENT_ROI_ERROR:
+      return "ROI segment parse error";
+    case visionary::DataStreamError::DATA_SEGMENT_LOCALIOS_ERROR:
+      return "Local I/Os segment parse error";
+    case visionary::DataStreamError::DATA_SEGMENT_FIELDINFORMATION_ERROR:
+      return "Field Information segment parse error";
+    case visionary::DataStreamError::DATA_SEGMENT_LOGICSIGNALS_ERROR:
+      return "Logic Signals segment parse error";
+    case visionary::DataStreamError::DATA_SEGMENT_IMU_ERROR:
+      return "IMU segment parse error";
+  }
+  return "unknown data stream error";
+}
+}  // namespace
+
+SickSafeVisionary::~SickSafeVisionary()
+{
+  reset();
+}
+
 SickSafeVisionary::CallbackReturn SickSafeVisionary::on_configure(
   [[maybe_unused]] const rclcpp_lifecycle::State & previous_state)
 {
-  // Setup UDP connection to the camera
+  tcp_ = (this->has_parameter("tcp")) ? this->get_parameter("tcp").as_bool()
+                                       : this->declare_parameter("tcp", false);
   int port = (this->has_parameter("port")) ? this->get_parameter("port").as_int()
-                                           : this->declare_parameter("port", 6060);
+                                           : this->declare_parameter("port", tcp_ ? 2114 : 6060);
+  const std::string device_ip =
+    (this->has_parameter("device_ip"))
+      ? this->get_parameter("device_ip").as_string()
+      : this->declare_parameter("device_ip", "");
+  const int stream_port = port;
+
+  if (tcp_ && device_ip.empty()) {
+    RCLCPP_WARN(this->get_logger(), "A device_ip is required when using the TCP stream.");
+    return CallbackReturn::FAILURE;
+  }
+
   data_handle_ = std::make_shared<visionary::SafeVisionaryData>();
   data_stream_ = std::make_shared<visionary::SafeVisionaryDataStream>(data_handle_);
-  if (!data_stream_->openUdpConnection(htons(port))) {
-    RCLCPP_WARN(this->get_logger(), "Could not open UDP connection on port: %i", port);
+  bool connection_open = false;
+  if (tcp_) {
+    connection_open = data_stream_->openTcpConnection(htons(port), device_ip);
+  } else {
+    connection_open = data_stream_->openUdpConnection(htons(port));
+  }
+  if (!connection_open) {
+    RCLCPP_WARN(
+      this->get_logger(), "Could not open %s connection on %s:%i.", tcp_ ? "TCP" : "UDP",
+      tcp_ ? device_ip.c_str() : "local host", stream_port);
     return CallbackReturn::FAILURE;
   }
 
   // Check the connection when working with real hardware
   bool real_hw = (this->has_parameter("real_hw")) ? this->get_parameter("real_hw").as_bool()
-                                                  : this->declare_parameter("real_hw", true);
-  if (real_hw && !data_stream_->getNextBlobUdp()) {
+                                                   : this->declare_parameter("real_hw", true);
+  const bool first_blob_ok =
+    !real_hw ||
+    (tcp_ ? data_stream_->getNextBlobTcp(receive_buffer_packet_size_)
+          : data_stream_->getNextBlobUdp());
+  if (!first_blob_ok) {
     RCLCPP_WARN(
-      this->get_logger(), "No sensor data on port %i. Please check your network connection.", port);
-    data_stream_->closeUdpConnection();
+      this->get_logger(), "Sensor startup failed: %s on %s port %i.",
+      dataStreamErrorToString(data_stream_->getLastError()), tcp_ ? "TCP" : "UDP", stream_port);
+    if (tcp_) {
+      data_stream_->closeTcpConnection();
+    } else {
+      data_stream_->closeUdpConnection();
+    }
     return CallbackReturn::FAILURE;
   }
 
@@ -75,10 +163,13 @@ SickSafeVisionary::CallbackReturn SickSafeVisionary::on_configure(
   // Start an asynchronous receive thread with a lock-free producer.
   receive_thread_ = std::thread([&]() {
     while (continue_) {
-      if (data_stream_->getNextBlobUdp()) {
+      if (
+        tcp_ ? data_stream_->getNextBlobTcp(receive_buffer_packet_size_)
+             : data_stream_->getNextBlobUdp()) {
         spsc_queue_.push(*data_handle_);
       } else {
-        RCLCPP_WARN(this->get_logger(), "UDP stream incomplete, skipping this frame.");
+        RCLCPP_WARN(
+          this->get_logger(), "%s stream incomplete, skipping this frame.", tcp_ ? "TCP" : "UDP");
       }
     }
   });
@@ -141,9 +232,19 @@ void SickSafeVisionary::reset()
   if (publish_thread_.joinable()) {
     publish_thread_.join();
   }
-  data_stream_->closeUdpConnection();
+  if (data_stream_) {
+    if (tcp_) {
+      data_stream_->closeTcpConnection();
+    } else {
+      data_stream_->closeUdpConnection();
+    }
+    data_stream_.reset();
+  }
 
-  data_publisher_->reset();
+  if (data_publisher_) {
+    data_publisher_->reset();
+    data_publisher_.reset();
+  }
 }
 
 }  // namespace sick

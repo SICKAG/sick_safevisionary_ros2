@@ -32,6 +32,54 @@
 
 namespace sick
 {
+namespace
+{
+sick_safevisionary_interfaces::msg::DeviceStatus makeDeviceStatusMessage(
+  const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data)
+{
+  sick_safevisionary_interfaces::msg::DeviceStatus message;
+  message.header = header;
+  message.status = static_cast<uint8_t>(frame_data.getDeviceStatus());
+  message.general_status.application_error =
+    frame_data.getDeviceStatusData().generalStatus.applicationError;
+  message.general_status.contamination_error =
+    frame_data.getDeviceStatusData().generalStatus.contaminationError;
+  message.general_status.contamination_warning =
+    frame_data.getDeviceStatusData().generalStatus.contaminationWarning;
+  message.general_status.dead_zone_detection =
+    frame_data.getDeviceStatusData().generalStatus.deadZoneDetection;
+  message.general_status.device_error = frame_data.getDeviceStatusData().generalStatus.deviceError;
+  message.general_status.temperature_warning =
+    frame_data.getDeviceStatusData().generalStatus.temperatureWarning;
+  message.general_status.run_mode_active =
+    frame_data.getDeviceStatusData().generalStatus.runModeActive;
+  message.general_status.wait_for_cluster =
+    frame_data.getDeviceStatusData().generalStatus.waitForCluster;
+  message.general_status.wait_for_input =
+    frame_data.getDeviceStatusData().generalStatus.waitForInput;
+  message.cop_non_safety_related = frame_data.getDeviceStatusData().COPNonSaftyRelated;
+  message.cop_safety_related = frame_data.getDeviceStatusData().COPSaftyRelated;
+  message.cop_reset_required = frame_data.getDeviceStatusData().COPResetRequired;
+  message.active_monitoring_case.monitoring_case_1 =
+    frame_data.getDeviceStatusData().activeMonitoringCase.currentCaseNumberMonitoringCase1;
+  message.active_monitoring_case.monitoring_case_2 =
+    frame_data.getDeviceStatusData().activeMonitoringCase.currentCaseNumberMonitoringCase2;
+  message.active_monitoring_case.monitoring_case_3 =
+    frame_data.getDeviceStatusData().activeMonitoringCase.currentCaseNumberMonitoringCase3;
+  message.active_monitoring_case.monitoring_case_4 =
+    frame_data.getDeviceStatusData().activeMonitoringCase.currentCaseNumberMonitoringCase4;
+  message.contamination_level = frame_data.getDeviceStatusData().contaminationLevel;
+  if (frame_data.hasConfigurationChecksum()) {
+    message.configuration_checksum_present = true;
+    message.configuration_checksum = frame_data.getDeviceStatusData().configurationChecksum;
+    message.dead_clusters_in_depth_map_zone_error =
+      frame_data.getDeviceStatusData().generalStatus.deadZoneDetection;
+    message.dead_zone_warning = frame_data.getDeviceStatusData().generalStatus.deadZoneWarning;
+  }
+  return message;
+}
+}  // namespace
+
 CompoundPublisher::CompoundPublisher(rclcpp_lifecycle::LifecycleNode * node) : node_(node)
 {
   camera_info_pub_ = node->create_publisher<sensor_msgs::msg::CameraInfo>("~/camera_info", 1);
@@ -262,40 +310,7 @@ sensor_msgs::msg::Image::SharedPtr CompoundPublisher::Vec8ToImage(
 void CompoundPublisher::publishDeviceStatus(
   const std_msgs::msg::Header & header, const visionary::SafeVisionaryData & frame_data)
 {
-  sick_safevisionary_interfaces::msg::DeviceStatus device_status_msg;
-  device_status_msg.header = header;
-  device_status_msg.status = static_cast<uint8_t>(frame_data.getDeviceStatus());
-  device_status_msg.general_status.application_error =
-    frame_data.getDeviceStatusData().generalStatus.applicationError;
-  device_status_msg.general_status.contamination_error =
-    frame_data.getDeviceStatusData().generalStatus.contaminationError;
-  device_status_msg.general_status.contamination_warning =
-    frame_data.getDeviceStatusData().generalStatus.contaminationWarning;
-  device_status_msg.general_status.dead_zone_detection =
-    frame_data.getDeviceStatusData().generalStatus.deadZoneDetection;
-  device_status_msg.general_status.device_error =
-    frame_data.getDeviceStatusData().generalStatus.deviceError;
-  device_status_msg.general_status.temperature_warning =
-    frame_data.getDeviceStatusData().generalStatus.temperatureWarning;
-  device_status_msg.general_status.run_mode_active =
-    frame_data.getDeviceStatusData().generalStatus.runModeActive;
-  device_status_msg.general_status.wait_for_cluster =
-    frame_data.getDeviceStatusData().generalStatus.waitForCluster;
-  device_status_msg.general_status.wait_for_input =
-    frame_data.getDeviceStatusData().generalStatus.waitForInput;
-  device_status_msg.cop_non_safety_related = frame_data.getDeviceStatusData().COPNonSaftyRelated;
-  device_status_msg.cop_safety_related = frame_data.getDeviceStatusData().COPSaftyRelated;
-  device_status_msg.cop_reset_required = frame_data.getDeviceStatusData().COPResetRequired;
-  device_status_msg.active_monitoring_case.monitoring_case_1 =
-    frame_data.getDeviceStatusData().activeMonitoringCase.currentCaseNumberMonitoringCase1;
-  device_status_msg.active_monitoring_case.monitoring_case_2 =
-    frame_data.getDeviceStatusData().activeMonitoringCase.currentCaseNumberMonitoringCase2;
-  device_status_msg.active_monitoring_case.monitoring_case_3 =
-    frame_data.getDeviceStatusData().activeMonitoringCase.currentCaseNumberMonitoringCase3;
-  device_status_msg.active_monitoring_case.monitoring_case_4 =
-    frame_data.getDeviceStatusData().activeMonitoringCase.currentCaseNumberMonitoringCase4;
-  device_status_msg.contamination_level = frame_data.getDeviceStatusData().contaminationLevel;
-  device_status_pub_->publish(device_status_msg);
+  device_status_pub_->publish(makeDeviceStatusMessage(header, frame_data));
 }
 
 void CompoundPublisher::publishIOs(
@@ -353,7 +368,7 @@ void CompoundPublisher::publishROI(
 {
   sick_safevisionary_interfaces::msg::ROIArray roi_array_msg;
   roi_array_msg.header = header;
-  for (auto & roi : frame_data.getRoiData().roiData) {
+  for (const auto & roi : frame_data.getRoiDataElements()) {
     sick_safevisionary_interfaces::msg::ROI roi_msg;
     roi_msg.id = roi.id;
     roi_msg.distance_value = roi.distanceValue;

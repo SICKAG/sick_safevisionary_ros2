@@ -33,8 +33,10 @@
 
 #include <boost/lockfree/policies.hpp>
 #include <boost/lockfree/spsc_queue.hpp>
+#include <cstdint>
 #include <memory>
 #include <thread>
+#include <vector>
 
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
@@ -66,6 +68,7 @@ class SickSafeVisionary : public rclcpp_lifecycle::LifecycleNode
 {
 public:
   SickSafeVisionary() : LifecycleNode("sick_safevisionary") {}
+  ~SickSafeVisionary() override;
 
   using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
@@ -91,6 +94,8 @@ private:
   std::atomic<bool> continue_{false};
 
   std::unique_ptr<CompoundPublisher> data_publisher_;
+  std::vector<std::uint8_t> receive_buffer_packet_size_;
+  bool tcp_{false};
 };
 }  // namespace sick
 

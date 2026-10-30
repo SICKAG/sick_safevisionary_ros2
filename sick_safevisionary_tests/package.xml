@@ -16,4 +16,8 @@
   <test_depend>launch_testing_ament_cmake</test_depend>
   <test_depend>sick_safevisionary_driver</test_depend>
 
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+
 </package>
